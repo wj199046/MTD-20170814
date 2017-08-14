@@ -22,10 +22,7 @@ CCaptureScreenLabel::~CCaptureScreenLabel()
 void CCaptureScreenLabel::setCaptureShape(CapScr_Shape captureShape)
 {
     m_enCaptureShape = captureShape;
-    if(CapScr_Polygon == m_enCaptureShape)
-    {
-        m_currentCaptureState = OnCapturePolygon;
-    }
+    m_currentCaptureState = CapScr_Polygon == m_enCaptureShape ? OnCapturePolygon : InitCapture;
 }
 
 void CCaptureScreenLabel::initStretchRect()
@@ -70,12 +67,18 @@ void CCaptureScreenLabel::setCaptureImage(const QPixmap & Image)
 
 void CCaptureScreenLabel::mousePressEvent(QMouseEvent *event)
 {
-    qDebug("mousePressEvent");
+    qDebug("mousePressEvent:m_currentCaptureState = %d",m_currentCaptureState);
 
     if(Qt::RightButton == event->button())
     {
-        m_currentCaptureState = InitCapture;
-        //close();
+        resetSelectedArea();
+        update();
+        return;
+    }
+
+    if (!this->pixmap())
+    {
+        return QLabel::mousePressEvent(event);
     }
 
     if(CapScr_Polygon == m_enCaptureShape)
@@ -105,7 +108,6 @@ void CCaptureScreenLabel::rectMousePressEvent(QMouseEvent *event)
     }
     else if(isPressPointInSelectRect(event->pos()))
     {
-        qDebug("rectMousePressEvent is in");
         m_currentCaptureState = BeginMoveCaptureArea;
         m_beginMovePoint = event->pos();
     }
@@ -120,7 +122,7 @@ void CCaptureScreenLabel::polygonMousePressEvent(QMouseEvent *event)
     case OnCapturePolygon:mousePressCapturePolygon(event);break;
     case FinishCapturePolygon:m_currentCaptureState = AdjustPolygon;
     case AdjustPolygon:mousePressAdjustPolygon(event); break;
-    default:break;
+    default:qDebug("defaul"); break;
     }
 
     return QWidget::mousePressEvent(event);
@@ -158,7 +160,7 @@ void CCaptureScreenLabel::mousePressAdjustPolygon(QMouseEvent *event)
 
 void CCaptureScreenLabel::mouseMoveEvent(QMouseEvent *event)
 {
-    //qDebug("move x=%d,y=%d,size=%d",event->pos().x(),event->y(),m_pPolygen->size());
+    //qDebug("mouseMoveEvent move x=%d,y=%d,size=%d",event->pos().x(),event->y(),m_pPolygen->size());
     //qDebug("mouseMoveEvent m_currentCaptureState=%d",m_currentCaptureState);
 
     if(CapScr_Polygon == m_enCaptureShape)
@@ -171,21 +173,31 @@ void CCaptureScreenLabel::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
+/********************************************************************
+* 函数名：rectMouseMoveEvent
+* 功能：  处理截取矩形和圆形的鼠标移动事件
+* 参数：  QMouseEvent *event
+* 返回值：无
+* 时间： 2017-8-11
+* 作者： wangzhiping
+*********************************************************************/
 void CCaptureScreenLabel::rectMouseMoveEvent(QMouseEvent *event)
 {
-    if(m_currentCaptureState == BeginCaptureImage)
+    QPoint endPoint = keepPointInRange(event);
+
+    if (BeginCaptureImage == m_currentCaptureState)
     {
-        m_endPoint = event->pos();
+        m_endPoint = endPoint;
         update();
     }
-    else if(m_currentCaptureState == BeginMoveCaptureArea)
+    else if (BeginMoveCaptureArea == m_currentCaptureState)
     {
-        m_endMovePoint = event->pos();
+        m_endMovePoint = endPoint;
         update();
     }
-    else if(m_currentCaptureState == BeginMoveStretchRect)
+    else if (BeginMoveStretchRect == m_currentCaptureState)
     {
-        m_endMovePoint = event->pos();
+        m_endMovePoint = endPoint;
         update();
 
         return QLabel::mouseMoveEvent(event);
@@ -209,8 +221,52 @@ void CCaptureScreenLabel::rectMouseMoveEvent(QMouseEvent *event)
     return QLabel::mouseMoveEvent(event);
 }
 
+/********************************************************************
+* 函数名：keepPointInRange
+* 功能：  限制节选框不会超出控件范围
+* 参数：  QMouseEvent *event
+* 返回值：QPoint
+* 时间： 2017-8-11
+* 作者： wangzhiping
+*********************************************************************/
+QPoint CCaptureScreenLabel::keepPointInRange(QMouseEvent *event)
+{
+    QPoint adjustedMousePos = event->pos();
+
+    if (event->pos().x() < 0)
+    {
+        adjustedMousePos.setX(0);
+    }
+
+    if (event->pos().x() > m_screenWidth)
+    {
+        adjustedMousePos.setX(m_screenWidth);
+    }
+
+    if (event->pos().y() < 0)
+    {
+        adjustedMousePos.setY(0);
+    }
+
+    if (event->pos().y() > m_screenHeight)
+    {
+        adjustedMousePos.setY(m_screenHeight);
+    }
+
+    return adjustedMousePos;
+}
+
+/********************************************************************
+* 函数名：polygonMouseMoveEvent
+* 功能：  处理截取多边形的鼠标移动事件
+* 参数：  QMouseEvent *event
+* 返回值：void
+* 时间： 2017-8-11
+* 作者： wangzhiping
+*********************************************************************/
 void CCaptureScreenLabel::polygonMouseMoveEvent(QMouseEvent *event)
 {
+    QPoint adjustedMousePos = keepPointInRange(event);
     if(m_currentCaptureState == OnCapturePolygon)
     {
         if(!m_pPolygen->isEmpty())
@@ -271,7 +327,6 @@ void CCaptureScreenLabel::mouseMoveAdjustStretchRect(QPoint point)
 
 void CCaptureScreenLabel::mouseDoubleClickEvent(QMouseEvent *event)
 {
-    if(m_enCaptureShape != CapScr_Rectangle) return;
     //finish polygon and draw stretch rect
     qDebug("double click");
 
@@ -284,11 +339,16 @@ void CCaptureScreenLabel::mouseDoubleClickEvent(QMouseEvent *event)
     {
         if (m_currentCaptureState == FinishCapturePolygon)
         {
+            qDebug("mouseDoubleClickEvent FinishCapturePolygon");
             signalCompleteCapture(m_capturePixmap);
             resetSelectedArea();
         }
         else
         {
+            if (m_pPolygen->isEmpty())
+            {
+                return;
+            }
             m_pPolygen->removeLast();
             qDebug("size=%d",m_pPolygen->size());
             m_currentCaptureState = FinishCapturePolygon;
@@ -307,7 +367,9 @@ void CCaptureScreenLabel::resetSelectedArea()
 {
     initStretchRect();
     m_currentSelectRect = QRect(0,0,0,0);
-    m_currentCaptureState = InitCapture;
+
+    m_currentCaptureState = FinishCapturePolygon == m_currentCaptureState ? OnCapturePolygon : InitCapture;
+
     m_pPolygen->clear();
     StretchRectVec.clear();
 }
@@ -494,15 +556,15 @@ bool CCaptureScreenLabel::MouseOnStretchRect(QPoint point)
 
 QRect CCaptureScreenLabel::getSelectRect()
 {
-    if(m_currentCaptureState == BeginCaptureImage || m_currentCaptureState == FinishCaptureImage)
+    if(BeginCaptureImage == m_currentCaptureState|| FinishCaptureImage == m_currentCaptureState)
     {
         return getRect(m_beginPoint,m_endPoint);
     }
-    else if(m_currentCaptureState == BeginMoveCaptureArea || m_currentCaptureState == FinishMoveCaptureArea)
+    else if(BeginMoveCaptureArea == m_currentCaptureState || FinishMoveCaptureArea == m_currentCaptureState)
     {
         return getMoveRect();
     }
-    else if(m_currentCaptureState == BeginMoveStretchRect || m_currentCaptureState == FinishMoveStretchRect)
+    else if(BeginMoveStretchRect == m_currentCaptureState|| FinishMoveStretchRect == m_currentCaptureState)
     {
         return getStretchRect();
     }

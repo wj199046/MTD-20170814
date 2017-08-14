@@ -80,6 +80,7 @@ private:
     void drawStretchRect();
 
     void mousePressEvent(QMouseEvent *event);
+    QPoint keepPointInRange(QMouseEvent *event);
     void rectMousePressEvent(QMouseEvent *event);
     void polygonMousePressEvent(QMouseEvent *event);
     void mousePressCapturePolygon(QMouseEvent *event);
