@@ -76,6 +76,9 @@ private slots:
     void on_comboBox_printScreenForm_currentIndexChanged(int index);
     void slotLogInUserId(QString strId);
 
+    void slotUpDateRecord();
+    void slotUpDateCheck();
+
 signals:
     void sendSplitScreenCount(int count);
     void sendPicture(QPixmap &, int);

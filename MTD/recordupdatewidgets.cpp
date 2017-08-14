@@ -9,19 +9,6 @@ RecordUpdateWidgets::RecordUpdateWidgets(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->userIdEdit->setEnabled(false);
-    ui->tableWidget_result->setColumnCount(7);
-    QStringList diagnoseHeader;
-    diagnoseHeader << QStringLiteral("编号") << "UserId" << QStringLiteral("就诊时间") << QStringLiteral("就诊地点") << QStringLiteral("医生编号") << QStringLiteral("医生姓名")
-                   << QStringLiteral("症状") << QStringLiteral("诊断结论") << QStringLiteral("诊断方法");
-    ui->tableWidget_result->setHorizontalHeaderLabels(diagnoseHeader);
-    ui->tableWidget_result->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);//表头等宽
-    ui->tableWidget_result->setSelectionBehavior(QAbstractItemView::SelectRows); //整行选中的方式
-    ui->tableWidget_result->setEditTriggers(QAbstractItemView::NoEditTriggers); //禁止修改
-    //设置表头字体加粗
-    QFont fontDiagnose = ui->tableWidget_result->horizontalHeader()->font();
-    fontDiagnose.setBold(true);
-    ui->tableWidget_result->horizontalHeader()->setFont(fontDiagnose);
-    ui->tableWidget_result->horizontalHeader()->setStyleSheet("QHeaderView::section{background:skyblue;}"); //设置表头背景色
 }
 
 RecordUpdateWidgets::~RecordUpdateWidgets()
@@ -42,26 +29,20 @@ void RecordUpdateWidgets::showRecord(MedRecord record1)
     ui->professionEdit->setText(record.profession);
     ui->personalHistoryEdit->setText(record.personalHistory);
     ui->familyHistoryEdit->setText(record.familyHistory);
-
-    for(int i = 0; i < record.allCheckResults.size(); i ++)
-    {
-        int rowCount = ui->tableWidget_result->rowCount();
-        ui->tableWidget_result->setRowCount(rowCount + 1);
-        ui->tableWidget_result->setItem(rowCount, 0, new QTableWidgetItem(QString::number(record.allCheckResults.at(i).id)));
-        ui->tableWidget_result->setItem(rowCount, 1, new QTableWidgetItem(QString::number(record.allCheckResults.at(i).userId)));
-
-        ui->tableWidget_result->setItem(rowCount, 2, new QTableWidgetItem(record.allCheckResults.at(i).checkDate.toString("yyyy-MM-dd hh:mm:ss")));
-        ui->tableWidget_result->setItem(rowCount, 3, new QTableWidgetItem(record.allCheckResults.at(i).checkSpot));
-        ui->tableWidget_result->setItem(rowCount, 4, new QTableWidgetItem(QString::number(record.allCheckResults.at(i).nDoctorID)));
-        ui->tableWidget_result->setItem(rowCount, 5, new QTableWidgetItem(record.allCheckResults.at(i).doctorName));
-        ui->tableWidget_result->setItem(rowCount, 6, new QTableWidgetItem(record.allCheckResults.at(i).symptom));
-        ui->tableWidget_result->setItem(rowCount, 7, new QTableWidgetItem(record.allCheckResults.at(i).decision));
-        ui->tableWidget_result->setItem(rowCount, 8, new QTableWidgetItem(record.allCheckResults.at(i).therapy));
-    }
 }
 
+/********************************************************************
+* 函数名：on_updateBtn_clicked
+* 功能：  槽函数，点击修改病例
+* 参数：  无
+* 返回值：无
+*
+* 时间： 2017-8-14
+* 作者：
+*********************************************************************/
 void RecordUpdateWidgets::on_updateBtn_clicked()
 {
+    //更新病例库
     record.name            = ui->nameEdit->text();
     record.age             = ui->ageEdit->text().toUInt();
     record.bMale           = (ui->gendleBox->currentText() == "Male") ? true : false;
@@ -79,6 +60,9 @@ void RecordUpdateWidgets::on_updateBtn_clicked()
     {
         QMessageBox::warning(this, QStringLiteral("更新病历"), QStringLiteral("更新病历失败"), QMessageBox::Ok);
     }
+
+    emit signalUpDateRecord();//通知更新病例到界面
+
     this->close();
 }
 
@@ -87,32 +71,4 @@ void RecordUpdateWidgets::on_cancleBtn_clicked()
     this->close();
 }
 
-void RecordUpdateWidgets::on_deleteResultBtn_clicked()
-{
-    int id = 0;
-    //删除当前选中的诊断
-    int rowIndex = ui->tableWidget_result->currentRow();
-    if (rowIndex != -1)
-    {
-        //删除数据库数据
-        id = ui->tableWidget_result->item(rowIndex, 0)->text().toInt();
-        mtd.deleteResult(id);
-        //删除table表中的数据
-        ui->tableWidget_result->removeRow(rowIndex);//删除当前行
-    }
-}
 
-void RecordUpdateWidgets::on_updateResultBtn_clicked()
-{
-    int rowIndex = ui->tableWidget_result->currentRow();
-    if(rowIndex == -1) return;
-    int id = ui->tableWidget_result->item(rowIndex, 0)->text().toInt();
-    MedCheckResult res;
-    mtd.selectResultById(id, res);
-
-    ResultUpdateWidgets *resultWidgets = new ResultUpdateWidgets;
-
-    resultWidgets->showResult(res);
-
-    resultWidgets->show();
-}

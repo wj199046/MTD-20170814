@@ -49,6 +49,7 @@ void ResultUpdateWidgets::on_saveResultBtn_clicked()
     {
         QMessageBox::warning(this, "更新诊断", "更新诊断失败", QMessageBox::Ok);
     }
+    emit signalUpDateCheck();
     this->close();
 }
 

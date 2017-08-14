@@ -18,6 +18,9 @@ public:
 
     void showResult(MedCheckResult res);
 
+signals:
+    void signalUpDateCheck();
+
 private slots:
     void on_saveResultBtn_clicked();
 

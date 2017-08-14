@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>752</width>
-    <height>639</height>
+    <width>668</width>
+    <height>525</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -296,7 +296,7 @@
    <property name="geometry">
     <rect>
      <x>400</x>
-     <y>590</y>
+     <y>490</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -305,37 +305,11 @@
     <string>取消</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="updateResultBtn">
-   <property name="geometry">
-    <rect>
-     <x>660</x>
-     <y>490</y>
-     <width>81</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>修改就诊记录</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="deleteResultBtn">
-   <property name="geometry">
-    <rect>
-     <x>660</x>
-     <y>530</y>
-     <width>81</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>删除就诊记录</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="updateBtn">
    <property name="geometry">
     <rect>
      <x>200</x>
-     <y>590</y>
+     <y>490</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -344,16 +318,16 @@
     <string>保存修改</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>21</x>
      <y>129</y>
      <width>629</width>
-     <height>431</height>
+     <height>331</height>
     </rect>
    </property>
-   <layout class="QGridLayout" name="gridLayout_2" rowstretch="1,1,3" columnstretch="0,0">
+   <layout class="QGridLayout" name="gridLayout_2" rowstretch="1,0" columnstretch="0,0">
     <item row="0" column="0">
      <widget class="QLabel" name="label_8">
       <property name="text">
@@ -361,8 +335,21 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="1">
-     <widget class="QTextEdit" name="personalHistoryEdit"/>
+    <item row="1" column="1">
+     <widget class="QTextEdit" name="familyHistoryEdit">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>131</height>
+       </size>
+      </property>
+     </widget>
     </item>
     <item row="1" column="0">
      <widget class="QLabel" name="label_9">
@@ -371,21 +358,25 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="1">
-     <widget class="QTextEdit" name="familyHistoryEdit"/>
-    </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="label_10">
-      <property name="text">
-       <string>就诊记录：</string>
+    <item row="0" column="1">
+     <widget class="QTextEdit" name="personalHistoryEdit">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>131</height>
+       </size>
       </property>
      </widget>
     </item>
-    <item row="2" column="1">
-     <widget class="QTableWidget" name="tableWidget_result"/>
-    </item>
    </layout>
   </widget>
+  <zorder>layoutWidget</zorder>
   <zorder>label</zorder>
   <zorder>userIdEdit</zorder>
   <zorder>label_2</zorder>
@@ -398,18 +389,7 @@
   <zorder>contactEdit</zorder>
   <zorder>label_6</zorder>
   <zorder>professionEdit</zorder>
-  <zorder>label_7</zorder>
-  <zorder>addressEdit</zorder>
-  <zorder>label_8</zorder>
-  <zorder>label_9</zorder>
-  <zorder>personalHistoryEdit</zorder>
-  <zorder>familyHistoryEdit</zorder>
-  <zorder>label_10</zorder>
-  <zorder>tableWidget_result</zorder>
-  <zorder>updateBtn</zorder>
   <zorder>cancleBtn</zorder>
-  <zorder>updateResultBtn</zorder>
-  <zorder>deleteResultBtn</zorder>
   <zorder>updateBtn</zorder>
   <zorder>addressEdit</zorder>
   <zorder>label_7</zorder>

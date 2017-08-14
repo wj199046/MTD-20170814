@@ -402,7 +402,11 @@ void Widget::on_pushButton_modifyCase_clicked()
     vector.clear();
     m_pMtdDataBase->searchRecord(QString::number(userId), vector);
 
-    if(NULL == m_recordUpdate) m_recordUpdate = new RecordUpdateWidgets;
+    if(NULL == m_recordUpdate)
+    {
+        m_recordUpdate = new RecordUpdateWidgets;
+        connect(m_recordUpdate, SIGNAL(signalUpDateRecord()), this, SLOT(slotUpDateRecord()));
+    }
 
     if(vector.size() == 0 || userId == 0)
     {
@@ -650,7 +654,7 @@ void Widget::on_pushButton_deleteScrollImage_clicked()
 
 /********************************************************************
 * 函数名：playVideo
-* 功能：  显示视频
+* 功能：  槽函数，显示视频
 * 参数：  无
 * 返回值：无
 *
@@ -938,7 +942,11 @@ void Widget::on_pushButton_modifyDiagnose_clicked()
     MedCheckResult result;
     m_pMtdDataBase->selectResultById(id, result);
 
-    if(NULL == m_resultUpdate) m_resultUpdate = new ResultUpdateWidgets;
+    if(NULL == m_resultUpdate)
+    {
+        m_resultUpdate = new ResultUpdateWidgets;
+        connect(m_resultUpdate, SIGNAL(signalUpDateCheck()), this, SLOT(slotUpDateCheck()));
+    }
 
     m_resultUpdate->showResult(result);
 
@@ -1010,4 +1018,72 @@ void Widget::slotLogInUserId(QString strId)
     ui->tableWidget_case->setItem(0, 1, new QTableWidgetItem(strName));
     ui->tableWidget_case->setItem(0, 2, new QTableWidgetItem(strSex));
     ui->tableWidget_case->setItem(0, 3, new QTableWidgetItem(strAge));
+}
+
+void Widget::slotUpDateCheck()
+{
+    if(NULL == m_pMtdDataBase) return;
+
+    int rowIndex       = ui->tableWidget_diagnose->currentRow();//获取当前行
+    if(-1 == rowIndex) return;
+    int userId  = ui->tableWidget_diagnose->item(rowIndex, 1)->text().toInt();//获取当前行UserId
+
+    //获取诊断
+    QVector<MedCheckResult> resVector;
+    resVector.clear();
+
+    m_pMtdDataBase->selectResult(userId, resVector);
+
+    if(true == resVector.empty()) return;
+
+
+    //先删除columnIndex对应的列
+    ui->tableWidget_diagnose->removeRow(rowIndex);
+    ui->tableWidget_diagnose->insertRow(rowIndex);
+
+    ui->tableWidget_diagnose->setItem(rowIndex, 0, new QTableWidgetItem(QString::number(resVector.at(rowIndex).id)));
+    ui->tableWidget_diagnose->setItem(rowIndex, 1, new QTableWidgetItem(QString::number(resVector.at(rowIndex).userId)));
+    ui->tableWidget_diagnose->setItem(rowIndex, 2, new QTableWidgetItem(resVector.at(rowIndex).checkDate.toString("yyyy-MM-dd hh:mm:ss")));
+    ui->tableWidget_diagnose->setItem(rowIndex, 3, new QTableWidgetItem(resVector.at(rowIndex).checkSpot));
+    ui->tableWidget_diagnose->setItem(rowIndex, 4, new QTableWidgetItem(QString::number(resVector.at(rowIndex).nDoctorID)));
+    ui->tableWidget_diagnose->setItem(rowIndex, 5, new QTableWidgetItem(resVector.at(rowIndex).doctorName));
+    ui->tableWidget_diagnose->setItem(rowIndex, 6, new QTableWidgetItem(resVector.at(rowIndex).decision));
+}
+
+/********************************************************************
+* 函数名：slotUpDateRecordAndCheck
+* 功能：  槽函数，点击修改病例或者诊断成功后，更新界面显示
+* 参数：  isRecord true修改病例
+*        isRecord false修改诊断
+* 返回值：无
+*
+* 时间： 2017-8-11
+* 作者：
+*********************************************************************/
+void Widget::slotUpDateRecord()
+{
+    if(NULL == m_pMtdDataBase) return;
+
+    int rowIndex       = ui->tableWidget_case->currentRow();//获取当前行
+    if(-1 == rowIndex) return;
+    QString strUserId  = ui->tableWidget_case->item(rowIndex, 0)->text();//获取当前行UserId
+
+    //获取病例
+    QVector<MedRecord> medVector;
+    medVector.clear();
+
+    m_pMtdDataBase->searchRecord(strUserId, medVector); //搜索病历
+
+    if(true == medVector.empty()) return;
+
+    //先删除columnIndex对应的列
+    ui->tableWidget_case->removeRow(rowIndex);
+    ui->tableWidget_case->insertRow(rowIndex);
+
+    //刷新病例
+    ui->tableWidget_case->setItem(rowIndex, 0, new QTableWidgetItem(QString::number(medVector.at(0).userID)));
+    ui->tableWidget_case->setItem(rowIndex, 1, new QTableWidgetItem(medVector.at(0).name));
+    QString strSex = (true == medVector.at(0).bMale) ? "Male" : "Female";
+    ui->tableWidget_case->setItem(rowIndex, 2, new QTableWidgetItem(strSex));
+    ui->tableWidget_case->setItem(rowIndex, 3, new QTableWidgetItem(QString::number(medVector.at(0).age)));
 }

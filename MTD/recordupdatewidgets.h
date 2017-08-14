@@ -18,14 +18,12 @@ public:
 
     void showRecord(MedRecord record);
 
+signals:
+    void signalUpDateRecord();
+
 private slots:
     void on_updateBtn_clicked();
-
     void on_cancleBtn_clicked();
-
-    void on_deleteResultBtn_clicked();
-
-    void on_updateResultBtn_clicked();
 
 private:
     Ui::RecordUpdateWidgets *ui;
