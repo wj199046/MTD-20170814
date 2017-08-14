@@ -21,6 +21,16 @@ scrollImageWidget::scrollImageWidget(QWidget *parent) :
     this->setEditTriggers(this->SelectedClicked);
 }
 
+/********************************************************************
+* 函数名：init
+* 功能：  初始化
+* 参数：  count       行列数
+*        isRowCount  是否为行数
+* 返回值：无
+*
+* 时间： 2017-8-14
+* 作者：
+*********************************************************************/
 void scrollImageWidget::init(int count, bool isRowCount)
 {
     m_bIsRowCount = isRowCount;
@@ -38,7 +48,16 @@ void scrollImageWidget::init(int count, bool isRowCount)
     }
 }
 
-
+/********************************************************************
+* 函数名：addImage
+* 功能：  添加图片
+* 参数：  pix         图片
+*        strImgText  图片内容
+* 返回值：无
+*
+* 时间： 2017-8-9
+* 作者：
+*********************************************************************/
 void scrollImageWidget::addImage(QPixmap &pix, const QString& strImgText)
 {
     this->horizontalHeader()->setVisible(false);
