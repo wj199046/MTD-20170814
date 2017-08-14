@@ -331,7 +331,15 @@ void Widget::controlCameraStop()
     }
 }
 
-
+/********************************************************************
+* 函数名：on_pushButton_search_clicked
+* 功能：  槽函数，搜索病例
+* 参数：  无
+* 返回值：无
+*
+* 时间： 2017-8-14
+* 作者：
+**********************************************************************/
 void Widget::on_pushButton_search_clicked()
 {
     if(NULL == m_pMtdDataBase) return;
@@ -340,11 +348,23 @@ void Widget::on_pushButton_search_clicked()
     searchRecordVec.clear();
     m_pMtdDataBase->searchRecord(strSearchText, searchRecordVec);
     if(true == searchRecordVec.empty()) return;
+
+    int rowCount = ui->tableWidget_case->rowCount();//获取当前行数
+
     for(int searchLoop = 0; searchLoop < searchRecordVec.size(); searchLoop ++)
     {
+        //如果界面中有相同的Id，就不显示
+        int userId = searchRecordVec.at(searchLoop).userID;
+        for(int tableLoop = 0; tableLoop < rowCount; tableLoop++)
+        {
+             if(userId == ui->tableWidget_case->item(tableLoop, 0)->text().toInt()) return;
+        }
+
         int caseRowCount = ui->tableWidget_case->rowCount();
         ui->tableWidget_case->setRowCount(caseRowCount + 1);
-        ui->tableWidget_case->setItem(caseRowCount, 0, new QTableWidgetItem(QString::number(searchRecordVec.at(searchLoop).userID)));
+
+        //在界面上显示
+        ui->tableWidget_case->setItem(caseRowCount, 0, new QTableWidgetItem(QString::number(userId)));
         ui->tableWidget_case->setItem(caseRowCount, 1, new QTableWidgetItem(searchRecordVec.at(searchLoop).name));
         QString strSex = (true == searchRecordVec.at(searchLoop).bMale) ? "Male" : "Female";
         ui->tableWidget_case->setItem(caseRowCount, 2, new QTableWidgetItem(strSex));
