@@ -1112,3 +1112,74 @@ void Widget::slotUpDateRecord()
     ui->tableWidget_case->setItem(rowIndex, 2, new QTableWidgetItem(strSex));
     ui->tableWidget_case->setItem(rowIndex, 3, new QTableWidgetItem(QString::number(medVector.at(0).age)));
 }
+
+/********************************************************************
+* 函数名：on_radioButton_GrayScale_toggled
+* 功能：  槽函数，视频处理，灰度图
+* 参数：  checked 按钮是否check
+* 返回值：无
+*
+* 时间： 2017-8-15
+* 作者：
+*********************************************************************/
+void Widget::on_radioButton_GrayScale_toggled(bool checked)
+{
+    if(true == checked)
+    {
+        if(NULL == m_pCurrentImage) return;
+        MTD::ImageParamer stValue;
+        stValue = m_pCurrentImage->getParamer();
+        stValue.gradation = MTD::Gray;
+        m_pCurrentImage->setParamer(stValue);
+    }
+}
+
+/********************************************************************
+* 函数名：on_radioButton_PseudoColor_toggled
+* 功能：  槽函数，视频处理，伪彩色
+* 参数：  checked 按钮是否check
+* 返回值：无
+*
+* 时间： 2017-8-15
+* 作者：
+*********************************************************************/
+void Widget::on_radioButton_PseudoColor_toggled(bool checked)
+{
+    if(true == checked)
+    {
+        if(NULL == m_pCurrentImage) return;
+        MTD::ImageParamer stValue;
+        stValue = m_pCurrentImage->getParamer();
+        int index = ui->comboBox_PseudoColorSelector->currentIndex();
+        switch(index)
+        {
+        case 0:
+            stValue.gradation = MTD::Color20;
+            break;
+        case 1:
+            stValue.gradation = MTD::Color40;
+            break;
+        case 2:
+            stValue.gradation = MTD::Color80;
+            break;
+        case 3:
+            stValue.gradation = MTD::Color160;
+        default:
+            break;
+        }
+        m_pCurrentImage->setParamer(stValue);
+    }
+}
+/********************************************************************
+* 函数名：on_comboBox_PseudoColorSelector_currentIndexChanged
+* 功能：  槽函数，获取伪彩色参数
+* 参数：  index
+* 返回值：无
+*
+* 时间： 2017-8-15
+* 作者：
+*********************************************************************/
+void Widget::on_comboBox_PseudoColorSelector_currentIndexChanged(int index)
+{
+    on_radioButton_PseudoColor_toggled(true);
+}

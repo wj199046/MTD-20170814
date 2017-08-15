@@ -79,6 +79,12 @@ private slots:
     void slotUpDateRecord();
     void slotUpDateCheck();
 
+    void on_radioButton_GrayScale_toggled(bool checked);
+
+    void on_radioButton_PseudoColor_toggled(bool checked);
+
+    void on_comboBox_PseudoColorSelector_currentIndexChanged(int index);
+
 signals:
     void sendSplitScreenCount(int count);
     void sendPicture(QPixmap &, int);
