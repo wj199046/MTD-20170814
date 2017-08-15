@@ -3,7 +3,6 @@
 
 #include <QWidget>
 #include"userinfowidgets.h"
-#include"analysiswidgets.h"
 #include<QTableWidgetItem>
 #include"pixlabelwidget.h"
 #include"MTDMed/mtdmed.h"
@@ -26,7 +25,6 @@ public:
     ~Widget();
 
 private slots:
-    void on_pushButton_maniTool_clicked();
     void ReceiveUserInfo(QString strName, QString strAge, QString strSex);
     void on_pushButton_capture_clicked();
     void doubleClickedShowPicture(QTableWidgetItem *pItem);
@@ -34,10 +32,6 @@ private slots:
     void showUserInfo(UserLabel *);
     void clickedShowDiagnosePicture(QTableWidgetItem *pItem);
     void clickedShowDiagnose(QTableWidgetItem *pItem);
-
-    void on_pushButton_splitScreen_1_clicked();
-    void on_pushButton_splitScreen_2_clicked();
-    void on_pushButton_splitScreen_4_clicked();
 
     void controlCameraUp();
     void controlCameraDown();
@@ -57,18 +51,6 @@ private slots:
 
     void playVideo();
 
-    void imageAnalysis_BlackAndWhite(bool checked);
-    void imageAnalysis_160(bool checked);
-    void imageAnalysis_80(bool checked);
-    void imageAnalysis_40(bool checked);
-    void imageAnalysis_20(bool checked);
-    void imageAnalysis_polarityReversal(bool checked);
-    void imageAnalysis_filtration(bool checked);
-    void imageAnalysis_histogram(bool checked);
-    void imageAnalysis_edgeDetection(int value);
-    void imageAnalysis_lowerTemperature(int value);
-    void imageAnalysis_upperTemperature(int value);
-
     void on_pushButton_modifyDiagnose_clicked();
 
     void slotSendPrintScreen(QPixmap captureimage);
@@ -85,6 +67,30 @@ private slots:
 
     void on_comboBox_PseudoColorSelector_currentIndexChanged(int index);
 
+    void on_spinBox_MaxTmp_valueChanged(int arg1);
+
+    void on_spinBox_MinTmp_valueChanged(int arg1);
+
+    void on_radioButton_GrayScale_2_toggled(bool checked);
+
+    void on_radioButton_PseudoColor_2_toggled(bool checked);
+
+    void on_comboBox_PseudoColorSelector_2_currentIndexChanged(int index);
+
+    void on_checkBox_polarityReversal_toggled(bool checked);
+
+    void on_checkBox_filtration_toggled(bool checked);
+
+    void on_checkBox_histogram_toggled(bool checked);
+
+    void on_horizontalSlider_edgeDetection_valueChanged(int value);
+
+    void on_SpinBox_lowerTemperature_valueChanged(int arg1);
+
+    void on_SpinBox_upperTemperature_valueChanged(int arg1);
+
+    void on_comboBox_splitScreen_currentIndexChanged(int index);
+
 signals:
     void sendSplitScreenCount(int count);
     void sendPicture(QPixmap &, int);
@@ -92,7 +98,6 @@ signals:
 private:
     Ui::Widget *ui;
     userInfoWidgets     *m_userInfo;
-    analysisWidgets     *m_analysisTool;
     MTDCameraCore       *m_pVideo;
     MTDImage            *m_pCurrentImage;
     MtdMed              *m_pMtdDataBase;

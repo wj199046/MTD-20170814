@@ -27,7 +27,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         widget.cpp \
-    analysiswidgets.cpp \
     ccapturescreenlabel.cpp \
     pixlabelwidget.cpp \
     recordupdatewidgets.cpp \
@@ -39,7 +38,6 @@ SOURCES += \
 
 HEADERS += \
         widget.h \
-    analysiswidgets.h \
     ccapturescreenlabel.h \
     common.h \
     pixlabelwidget.h \
@@ -53,7 +51,6 @@ HEADERS += \
 
 FORMS += \
         widget.ui \
-    analysiswidgets.ui \
     recordupdatewidgets.ui \
     resultupdatewidgets.ui \
     savepicturewidgets.ui \

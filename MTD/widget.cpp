@@ -17,7 +17,7 @@
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Widget),
-    m_pVideo(NULL), m_userInfo(NULL), m_analysisTool(NULL),
+    m_pVideo(NULL), m_userInfo(NULL),
     m_bUpDownStop(false), m_bFocusStop(false), m_pMtdDataBase(NULL), m_pSaveDiagnose(NULL),
     m_recordUpdate(NULL), m_resultUpdate(NULL)
 {
@@ -25,10 +25,6 @@ Widget::Widget(QWidget *parent) :
 
     ui->listWidget->init(1, true);
     ui->listWidget_dataBasePicture->init(2, false);
-
-    ui->comboBox_printScreenForm->addItem(tr("矩形"));
-    ui->comboBox_printScreenForm->addItem(tr("椭圆"));
-    ui->comboBox_printScreenForm->addItem(tr("多边形状"));
 
     //隐藏TabBar控件
     ui->tabWidget->tabBar()->hide();    
@@ -92,6 +88,10 @@ Widget::Widget(QWidget *parent) :
     connect(ui->pushButton_focus_plus, SIGNAL(released()), this, SLOT(controlCameraStop()));
     connect(ui->pushButton_focus_minus, SIGNAL(released()), this, SLOT(controlCameraStop()));
 
+    ui->tableWidget_TemperatureMessure->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);//表头等宽
+    ui->tableWidget_TemperatureMessure->setSelectionBehavior(QAbstractItemView::SelectRows); //整行选中的方式
+    ui->tableWidget_TemperatureMessure->setEditTriggers(QAbstractItemView::NoEditTriggers); //禁止修改
+
     //病例库
     ui->tableWidget_case->setColumnCount(4);
     QStringList caseHeader;
@@ -126,19 +126,6 @@ Widget::Widget(QWidget *parent) :
     //数据库
     m_pMtdDataBase = new MtdMed();
 
-    //图片分析
-    m_analysisTool  = new analysisWidgets;
-    connect(m_analysisTool, SIGNAL(signal_imageAnalysis_BlackAndWhite(bool)), this, SLOT(imageAnalysis_BlackAndWhite(bool)));
-    connect(m_analysisTool, SIGNAL(signal_imageAnalysis_160(bool)), this, SLOT(imageAnalysis_160(bool)));
-    connect(m_analysisTool, SIGNAL(signal_imageAnalysis_80(bool)), this, SLOT(imageAnalysis_80(bool)));
-    connect(m_analysisTool, SIGNAL(signal_imageAnalysis_40(bool)), this, SLOT(imageAnalysis_40(bool)));
-    connect(m_analysisTool, SIGNAL(signal_imageAnalysis_20(bool)), this, SLOT(imageAnalysis_20(bool)));
-    connect(m_analysisTool, SIGNAL(signal_imageAnalysis_polarityReversal(bool)), this, SLOT(imageAnalysis_polarityReversal(bool)));
-    connect(m_analysisTool, SIGNAL(signal_imageAnalysis_filtration(bool)), this, SLOT(imageAnalysis_filtration(bool)));
-    connect(m_analysisTool, SIGNAL(signal_imageAnalysis_histogram(bool)), this, SLOT(imageAnalysis_histogram(bool)));
-    connect(m_analysisTool, SIGNAL(signal_imageAnalysis_edgeDetection(int)), this, SLOT(imageAnalysis_edgeDetection(int)));
-    connect(m_analysisTool, SIGNAL(signal_imageAnalysis_lowerTemperature(int)), this, SLOT(imageAnalysis_lowerTemperature(int)));
-    connect(m_analysisTool, SIGNAL(signal_imageAnalysis_upperTemperature(int)), this, SLOT(imageAnalysis_upperTemperature(int)));
     //建信号槽，将鼠标拖动的图片的列数，传递给图片分析区
     connect(ui->listWidget, SIGNAL(signal_currentColumn(int)), ui->label_analysisPicture, SLOT(getColumn(int)));
 }
@@ -155,16 +142,21 @@ Widget::~Widget()
 {
     delete ui;
     delete m_userInfo;
-    delete m_analysisTool;
     delete m_pVideo;
     delete m_pMtdDataBase;
     delete m_pSaveDiagnose;
     m_pCurrentImage = NULL;
-}
-
-void Widget::on_pushButton_maniTool_clicked()
-{
-    m_analysisTool->show();
+    delete m_recordUpdate;
+    delete m_resultUpdate;
+    if(true != m_MtdImageVec.empty())
+    {
+        for(int i = 0; i < m_MtdImageVec.size(); i++)
+        {
+            //删除vector中的图片
+            delete m_MtdImageVec.at(i);
+            m_MtdImageVec.remove(i);
+        }
+    }
 }
 
 void Widget::ReceiveUserInfo(QString strName, QString strAge, QString strSex)
@@ -270,21 +262,6 @@ void Widget::on_pushButton_capture_clicked()
  {
      m_userInfo->show();
  }
-
-void Widget::on_pushButton_splitScreen_1_clicked()
-{
-    emit sendSplitScreenCount(1);
-}
-
-void Widget::on_pushButton_splitScreen_2_clicked()
-{
-    emit sendSplitScreenCount(2);
-}
-
-void Widget::on_pushButton_splitScreen_4_clicked()
-{
-    emit sendSplitScreenCount(4);
-}
 
 void Widget::controlCameraUp()
 {
@@ -694,7 +671,7 @@ void Widget::playVideo()
 }
 
 /********************************************************************
-* 函数名：imageAnalysis_BlackAndWhite
+* 函数名：on_radioButton_GrayScale_2_toggled
 * 功能：  槽函数，图片处理，将图片以黑白方式显示
 * 参数：  checked  radiobutton
 * 返回值：无
@@ -702,8 +679,9 @@ void Widget::playVideo()
 * 时间： 2017-8-9
 * 作者：
 *******************************************************************/
-void Widget::imageAnalysis_BlackAndWhite(bool checked)
+void Widget::on_radioButton_GrayScale_2_toggled(bool checked)
 {
+    if(false == checked) return;
     //获取当前屏幕对应的列号
     int index = ui->label_analysisPicture->getCurrentColumn(0);
     if(-1 == index) return;
@@ -718,100 +696,66 @@ void Widget::imageAnalysis_BlackAndWhite(bool checked)
 
 }
 /********************************************************************
-* 函数名：imageAnalysis_160
-* 功能：  槽函数，图片处理，将图片以160色方式显示
+* 函数名：on_radioButton_PseudoColor_2_toggled
+* 功能：  槽函数，图片处理，将图片以伪彩色显示
 * 参数：  checked  radiobutton
 * 返回值：无
 *
-* 时间： 2017-8-9
+* 时间： 2017-8-15
 * 作者：
 *******************************************************************/
-void Widget::imageAnalysis_160(bool checked)
+void Widget::on_radioButton_PseudoColor_2_toggled(bool checked)
 {
-    //获取当前屏幕对应的列号
-    int index = ui->label_analysisPicture->getCurrentColumn(0);
-    if(-1 == index) return;
+    if(false == checked) return;
 
-    MTD::ImageParamer stImagePara = m_MtdImageVec.at(index)->getParamer();
-    stImagePara.gradation = MTD::Color160;
-    m_MtdImageVec[index]->setParamer(stImagePara);
-    //更新图片
-    QImage image = m_MtdImageVec[index]->dst2QImage();
-    ui->listWidget->replacePicture(index, image);
-    ui->label_analysisPicture->upDatePicture(image, 1);
-}
-/********************************************************************
-* 函数名：imageAnalysis_80
-* 功能：  槽函数，图片处理，将图片以80色方式显示
-* 参数：  checked  radiobutton
-* 返回值：无
-*
-* 时间： 2017-8-9
-* 作者：
-*******************************************************************/
-void Widget::imageAnalysis_80(bool checked)
-{
-    //获取当前屏幕对应的列号
-    int index = ui->label_analysisPicture->getCurrentColumn(0);
-    if(-1 == index) return;
+    if(NULL == m_pCurrentImage) return;
 
-    MTD::ImageParamer stImagePara = m_MtdImageVec.at(index)->getParamer();
-    stImagePara.gradation = MTD::Color80;
-    m_MtdImageVec[index]->setParamer(stImagePara);
+    //获取当前屏幕对应的列号
+    int columnIndex = ui->label_analysisPicture->getCurrentColumn(0);
+    if(-1 == columnIndex) return;
+
+    MTD::ImageParamer stImagePara = m_MtdImageVec.at(columnIndex)->getParamer();
+    int index = ui->comboBox_PseudoColorSelector_2->currentIndex();
+    switch(index)
+    {
+    case 0:
+        stImagePara.gradation = MTD::Color20;
+        break;
+    case 1:
+        stImagePara.gradation = MTD::Color40;
+        break;
+    case 2:
+        stImagePara.gradation = MTD::Color80;
+        break;
+    case 3:
+        stImagePara.gradation = MTD::Color160;
+    default:
+        break;
+    }
+    m_MtdImageVec[columnIndex]->setParamer(stImagePara);
+
     //更新图片
-    QImage image = m_MtdImageVec[index]->dst2QImage();
-    ui->listWidget->replacePicture(index, image);
+    QImage image = m_MtdImageVec[columnIndex]->dst2QImage();
+    ui->listWidget->replacePicture(columnIndex, image);
     ui->label_analysisPicture->upDatePicture(image, 1);
 }
 
 /********************************************************************
-* 函数名：imageAnalysis_40
-* 功能：  槽函数，图片处理，将图片以40色方式显示
-* 参数：  checked  radiobutton
+* 函数名：on_comboBox_PseudoColorSelector_2_currentIndexChanged
+* 功能：  槽函数，图片处理，将图片以伪彩色显示
+* 参数：  index
 * 返回值：无
 *
-* 时间： 2017-8-9
+* 时间： 2017-8-15
 * 作者：
 *******************************************************************/
-void Widget::imageAnalysis_40(bool checked)
+void Widget::on_comboBox_PseudoColorSelector_2_currentIndexChanged(int index)
 {
-    //获取当前屏幕对应的列号
-    int index = ui->label_analysisPicture->getCurrentColumn(0);
-    if(-1 == index) return;
-
-    MTD::ImageParamer stImagePara = m_MtdImageVec.at(index)->getParamer();
-    stImagePara.gradation = MTD::Color40;
-    m_MtdImageVec[index]->setParamer(stImagePara);
-    //更新图片
-    QImage image = m_MtdImageVec[index]->dst2QImage();
-    ui->listWidget->replacePicture(index, image);
-    ui->label_analysisPicture->upDatePicture(image, 1);
+    on_radioButton_PseudoColor_2_toggled(true);
 }
-/********************************************************************
-* 函数名：imageAnalysis_20
-* 功能：  槽函数，图片处理，将图片以20色方式显示
-* 参数：  checked  radiobutton
-* 返回值：无
-*
-* 时间： 2017-8-9
-* 作者：
-*******************************************************************/
-void Widget::imageAnalysis_20(bool checked)
-{
-    //获取当前屏幕对应的列号
-    int index = ui->label_analysisPicture->getCurrentColumn(0);
-    if(-1 == index) return;
 
-    MTD::ImageParamer stImagePara = m_MtdImageVec.at(index)->getParamer();
-    stImagePara.gradation = MTD::Color20;
-    m_MtdImageVec[index]->setParamer(stImagePara);
-    //更新图片
-    QImage image = m_MtdImageVec[index]->dst2QImage();
-    ui->listWidget->replacePicture(index, image);
-    ui->label_analysisPicture->upDatePicture(image, 1);
-}
 /********************************************************************
-* 函数名：imageAnalysis_polarityReversal
+* 函数名：on_checkBox_polarityReversal_toggled
 * 功能：  槽函数，图片处理，极性交换
 * 参数：  checked  radiobutton
 * 返回值：无
@@ -819,7 +763,7 @@ void Widget::imageAnalysis_20(bool checked)
 * 时间： 2017-8-9
 * 作者：
 *********************************************************************/
-void Widget::imageAnalysis_polarityReversal(bool checked)
+void Widget::on_checkBox_polarityReversal_toggled(bool checked)
 {
     //获取当前屏幕对应的列号
     int index = ui->label_analysisPicture->getCurrentColumn(0);
@@ -834,7 +778,7 @@ void Widget::imageAnalysis_polarityReversal(bool checked)
     ui->label_analysisPicture->upDatePicture(image, 1);
 }
 /********************************************************************
-* 函数名：imageAnalysis_filtration
+* 函数名：on_checkBox_filtration_toggled
 * 功能：  槽函数，图片处理，滤波
 * 参数：  checked  radiobutton
 * 返回值：无
@@ -842,7 +786,7 @@ void Widget::imageAnalysis_polarityReversal(bool checked)
 * 时间： 2017-8-9
 * 作者：
 *********************************************************************/
-void Widget::imageAnalysis_filtration(bool checked)
+void Widget::on_checkBox_filtration_toggled(bool checked)
 {
     //获取当前屏幕对应的列号
     int index = ui->label_analysisPicture->getCurrentColumn(0);
@@ -857,7 +801,7 @@ void Widget::imageAnalysis_filtration(bool checked)
     ui->label_analysisPicture->upDatePicture(image, 1);
 }
 /********************************************************************
-* 函数名：imageAnalysis_histogram
+* 函数名：on_checkBox_histogram_toggled
 * 功能：  槽函数，图片处理，直方图均衡
 * 参数：  checked  radiobutton
 * 返回值：无
@@ -865,7 +809,7 @@ void Widget::imageAnalysis_filtration(bool checked)
 * 时间： 2017-8-9
 * 作者：
 *********************************************************************/
-void Widget::imageAnalysis_histogram(bool checked)
+void Widget::on_checkBox_histogram_toggled(bool checked)
 {
     //获取当前屏幕对应的列号
     int index = ui->label_analysisPicture->getCurrentColumn(0);
@@ -880,7 +824,7 @@ void Widget::imageAnalysis_histogram(bool checked)
     ui->label_analysisPicture->upDatePicture(image, 1);
 }
 /********************************************************************
-* 函数名：imageAnalysis_edgeDetection
+* 函数名：on_horizontalSlider_edgeDetection_valueChanged
 * 功能：  槽函数，图片处理，边缘检测
 * 参数：  checked  radiobutton
 * 返回值：无
@@ -888,7 +832,7 @@ void Widget::imageAnalysis_histogram(bool checked)
 * 时间： 2017-8-9
 * 作者：
 *********************************************************************/
-void Widget::imageAnalysis_edgeDetection(int value)
+void Widget::on_horizontalSlider_edgeDetection_valueChanged(int value)
 {
     //获取当前屏幕对应的列号
     int index = ui->label_analysisPicture->getCurrentColumn(0);
@@ -903,7 +847,7 @@ void Widget::imageAnalysis_edgeDetection(int value)
     ui->label_analysisPicture->upDatePicture(image, 1);
 }
 /********************************************************************
-* 函数名：imageAnalysis_lowerTemperature
+* 函数名：on_SpinBox_lowerTemperature_valueChanged
 * 功能：  槽函数，图片处理，温度下限
 * 参数：  checked  radiobutton
 * 返回值：无
@@ -911,14 +855,14 @@ void Widget::imageAnalysis_edgeDetection(int value)
 * 时间： 2017-8-9
 * 作者：
 *********************************************************************/
-void Widget::imageAnalysis_lowerTemperature(int value)
+void Widget::on_SpinBox_lowerTemperature_valueChanged(int arg1)
 {
     //获取当前屏幕对应的列号
     int index = ui->label_analysisPicture->getCurrentColumn(0);
     if(-1 == index) return;
 
     MTD::ImageParamer stImagePara = m_MtdImageVec.at(index)->getParamer();
-    stImagePara.temLow            = value;
+    stImagePara.temLow            = arg1;
     m_MtdImageVec[index]->setParamer(stImagePara);
     //更新图片
     QImage image = m_MtdImageVec[index]->dst2QImage();
@@ -934,14 +878,14 @@ void Widget::imageAnalysis_lowerTemperature(int value)
 * 时间： 2017-8-9
 * 作者：
 *********************************************************************/
-void Widget::imageAnalysis_upperTemperature(int value)
+void Widget::on_SpinBox_upperTemperature_valueChanged(int arg1)
 {
     //获取当前屏幕对应的列号
     int index = ui->label_analysisPicture->getCurrentColumn(0);
     if(-1 == index) return;
 
     MTD::ImageParamer stImagePara = m_MtdImageVec.at(index)->getParamer();
-    stImagePara.temHigh           = value;
+    stImagePara.temHigh           = arg1;
     m_MtdImageVec[index]->setParamer(stImagePara);
     //更新图片
     QImage image = m_MtdImageVec[index]->dst2QImage();
@@ -1170,6 +1114,7 @@ void Widget::on_radioButton_PseudoColor_toggled(bool checked)
         m_pCurrentImage->setParamer(stValue);
     }
 }
+
 /********************************************************************
 * 函数名：on_comboBox_PseudoColorSelector_currentIndexChanged
 * 功能：  槽函数，获取伪彩色参数
@@ -1183,3 +1128,67 @@ void Widget::on_comboBox_PseudoColorSelector_currentIndexChanged(int index)
 {
     on_radioButton_PseudoColor_toggled(true);
 }
+
+/********************************************************************
+* 函数名：on_spinBox_MaxTmp_valueChanged
+* 功能：  槽函数，获取温度上限
+* 参数：  index
+* 返回值：无
+*
+* 时间： 2017-8-15
+* 作者：
+*********************************************************************/
+void Widget::on_spinBox_MaxTmp_valueChanged(int arg1)
+{
+    if(NULL == m_pCurrentImage) return;
+    MTD::ImageParamer stValue;
+    stValue = m_pCurrentImage->getParamer();
+    stValue.temHigh = arg1;
+    m_pCurrentImage->setParamer(stValue);
+}
+
+/********************************************************************
+* 函数名：on_spinBox_MaxTmp_valueChanged
+* 功能：  槽函数，获取温度下限
+* 参数：  index
+* 返回值：无
+*
+* 时间： 2017-8-15
+* 作者：
+*********************************************************************/
+void Widget::on_spinBox_MinTmp_valueChanged(int arg1)
+{
+    if(NULL == m_pCurrentImage) return;
+    MTD::ImageParamer stValue;
+    stValue = m_pCurrentImage->getParamer();
+    stValue.temLow = arg1;
+    m_pCurrentImage->setParamer(stValue);
+}
+
+/********************************************************************
+* 函数名：on_comboBox_splitScreen_currentIndexChanged
+* 功能：  槽函数，分屏
+* 参数：  index
+* 返回值：无
+*
+* 时间： 2017-8-15
+* 作者：
+*********************************************************************/
+void Widget::on_comboBox_splitScreen_currentIndexChanged(int index)
+{
+    switch(index)
+    {
+    case 0:
+        emit sendSplitScreenCount(1);
+        break;
+    case 1:
+        emit sendSplitScreenCount(2);
+        break;
+    case 2:
+        emit sendSplitScreenCount(4);
+        break;
+    default:
+        break;
+    }
+}
+
