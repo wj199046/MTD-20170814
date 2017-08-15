@@ -683,9 +683,14 @@ void Widget::on_pushButton_deleteScrollImage_clicked()
 *******************************************************************/
 void Widget::playVideo()
 {
-    if(NULL == m_pVideo || NULL == m_pCurrentImage) return;
-    ui->label_video->setPixmap(QPixmap::fromImage(m_pCurrentImage->dst2QImage().scaled(278, 330)));
-    ui->label_video->setScaledContents(true);
+    if(NULL == m_pVideo || NULL == m_pCurrentImage)
+        return;
+    m_resizedVideoFrame = QPixmap::fromImage(m_pCurrentImage->dst2QImage().scaled(ui->label_video->size(),Qt::KeepAspectRatio));
+    qDebug("Widget::playVideo()::m_pCurrentImage w=%d,h=%d,\nm_resizedVideoFrame w=%d,h=%d,\nui->label_video w=%d,h=%d",m_pCurrentImage->dst2QImage().width(),m_pCurrentImage->dst2QImage().height()
+           ,m_resizedVideoFrame.width(),m_resizedVideoFrame.height(),ui->label_video->width(),ui->label_video->height());
+    qDebug("aspect ratio =%f",(float)m_resizedVideoFrame.height()/(float)m_resizedVideoFrame.width());
+    ui->label_video->setPixmap(m_resizedVideoFrame);
+    //ui->label_video->setScaledContents(true);
 }
 
 /********************************************************************

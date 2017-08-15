@@ -99,6 +99,8 @@ private:
     bool                 m_bUpDownStop;
     bool                 m_bFocusStop;
 
+    QPixmap             m_resizedVideoFrame;
+
     enum enMainWidgetsTab
     {
         EN_OPERATE_TAB  = 0,

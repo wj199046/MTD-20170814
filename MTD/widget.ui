@@ -20,7 +20,7 @@
       <number>0</number>
      </property>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,7">
+      <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,10">
        <property name="spacing">
         <number>0</number>
        </property>
@@ -146,7 +146,6 @@
              <property name="text" stdset="0">
               <string>TextLabel</string>
              </property>
-             <zorder>tabWidget</zorder>
             </widget>
            </item>
            <item>
@@ -204,18 +203,27 @@
           <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="4,1,1,3">
            <item>
             <widget class="QLabel" name="label_video">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="frameShape">
-              <enum>QFrame::Box</enum>
+              <enum>QFrame::NoFrame</enum>
              </property>
              <property name="text">
               <string>视频区</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
              </property>
             </widget>
            </item>
            <item>
             <layout class="QVBoxLayout" name="verticalLayout_14" stretch="30,1">
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,1">
+              <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="2,3">
                <item>
                 <widget class="QLabel" name="label_coloredTape">
                  <property name="frameShape">
@@ -333,32 +341,6 @@
                <property name="verticalSpacing">
                 <number>0</number>
                </property>
-               <item row="0" column="0">
-                <widget class="QPushButton" name="pushButton_up">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>上</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QPushButton" name="pushButton_capture">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>抓图</string>
-                 </property>
-                </widget>
-               </item>
                <item row="0" column="1">
                 <widget class="QPushButton" name="pushButton_down">
                  <property name="sizePolicy">
@@ -369,19 +351,6 @@
                  </property>
                  <property name="text">
                   <string>下</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QPushButton" name="pushButton_focus_plus">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>聚焦+</string>
                  </property>
                 </widget>
                </item>
@@ -398,6 +367,45 @@
                  </property>
                 </widget>
                </item>
+               <item row="2" column="0">
+                <widget class="QPushButton" name="pushButton_capture">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>抓图</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QPushButton" name="pushButton_focus_plus">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>聚焦+</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QPushButton" name="pushButton_up">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>上</string>
+                 </property>
+                </widget>
+               </item>
                <item row="2" column="1">
                 <widget class="QPushButton" name="pushButton_captureAgain">
                  <property name="sizePolicy">
@@ -410,6 +418,19 @@
                   <string>重新获取</string>
                  </property>
                 </widget>
+               </item>
+               <item row="1" column="2">
+                <spacer name="horizontalSpacer_4">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>32</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
                </item>
               </layout>
              </item>
@@ -500,19 +521,7 @@
             </layout>
            </item>
           </layout>
-          <zorder></zorder>
-          <zorder>tableWidget_TemperatureMessure</zorder>
-          <zorder>comboBox_ChooseCaptureArea</zorder>
-          <zorder>label_ChooseCaptureAreaTip</zorder>
-          <zorder>verticalSpacer</zorder>
-          <zorder>radioButton_GrayScale</zorder>
-          <zorder>radioButton_PseudoColor</zorder>
-          <zorder>comboBox_PseudoColorSelector</zorder>
-          <zorder>label_MaxTmpTip</zorder>
-          <zorder>label_MinTmpTip</zorder>
-          <zorder>spinBox_MaxTmp</zorder>
-          <zorder>spinBox_MinTmp</zorder>
-          <zorder>horizontalSpacer_2</zorder>
+          <zorder>label_video</zorder>
           <zorder>horizontalSpacer_3</zorder>
          </widget>
          <widget class="QWidget" name="tab_2">
