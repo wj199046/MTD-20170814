@@ -91,6 +91,9 @@ Widget::Widget(QWidget *parent) :
     ui->tableWidget_TemperatureMessure->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);//表头等宽
     ui->tableWidget_TemperatureMessure->setSelectionBehavior(QAbstractItemView::SelectRows); //整行选中的方式
     ui->tableWidget_TemperatureMessure->setEditTriggers(QAbstractItemView::NoEditTriggers); //禁止修改
+    ui->tableWidget_pictureTemperatureMessure->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);//表头等宽
+    ui->tableWidget_pictureTemperatureMessure->setSelectionBehavior(QAbstractItemView::SelectRows); //整行选中的方式
+    ui->tableWidget_pictureTemperatureMessure->setEditTriggers(QAbstractItemView::NoEditTriggers); //禁止修改
 
     //病例库
     ui->tableWidget_case->setColumnCount(4);

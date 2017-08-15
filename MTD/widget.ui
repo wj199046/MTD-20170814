@@ -547,7 +547,7 @@
               <widget class="SplitScreenLabelWidget" name="label_analysisPicture" native="true"/>
              </item>
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_3" stretch="2,1,1">
+              <layout class="QVBoxLayout" name="verticalLayout_3" stretch="2,1,0">
                <item>
                 <widget class="QLabel" name="label_printScreen">
                  <property name="frameShape">
@@ -816,13 +816,27 @@
                 </layout>
                </item>
                <item>
-                <widget class="QLabel" name="label_6">
-                 <property name="frameShape">
-                  <enum>QFrame::Box</enum>
-                 </property>
-                 <property name="text">
-                  <string>用于显示温度</string>
-                 </property>
+                <widget class="QTableWidget" name="tableWidget_pictureTemperatureMessure">
+                 <column>
+                  <property name="text">
+                   <string>编号</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>最高温</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>最低温</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>平均</string>
+                  </property>
+                 </column>
                 </widget>
                </item>
               </layout>
