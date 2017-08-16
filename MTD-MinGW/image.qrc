@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/btn_0.png</file>
+        <file>images/btn_1.png</file>
+        <file>images/btn_2.png</file>
+        <file>images/btn_3.png</file>
+        <file>images/desktop_0.jpg</file>
+        <file>images/l1.png</file>
+        <file>images/l2.png</file>
+        <file>images/l3.png</file>
+        <file>images/l4.png</file>
+		<file>images/l5.png</file>
+		<file>images/l6.png</file>
+		<file>images/l7.png</file>
+		<file>images/l8.png</file>
+    </qresource>
+</RCC>
