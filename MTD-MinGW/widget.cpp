@@ -72,7 +72,7 @@ Widget::Widget(QWidget *parent) :
     connect(ui->listWidget, SIGNAL(itemDoubleClicked(QTableWidgetItem *)), this, SLOT(doubleClickedShowPicture(QTableWidgetItem*)));
 
     connect(this, SIGNAL(sendSplitScreenCount(int)), ui->label_analysisPicture, SLOT(splitScreen(int)));
-    connect(this, SIGNAL(sendPicture(QPixmap&, int)), ui->label_analysisPicture, SLOT(receivePicture(QPixmap &, int)));
+    connect(this, SIGNAL(sendPicture(QPixmap, int)), ui->label_analysisPicture, SLOT(receivePicture(QPixmap , int)));
     connect(ui->label_analysisPicture, SIGNAL(signalSendPrintScreen(QPixmap, QPoint, QPoint, QPoint)), this, SLOT(slotSendPrintScreen(QPixmap, QPoint, QPoint, QPoint)));
     connect(ui->label_analysisPicture, SIGNAL(signalTempMeasCoordinate(QPoint, QPoint, QPoint)), this, SLOT(slotTempMeasCoordinate(QPoint, QPoint, QPoint)));
 
@@ -157,7 +157,7 @@ Widget::Widget(QWidget *parent) :
 
     ui->temDataTable->setColumnCount(5);
     QStringList temDataHeader;
-    temDataHeader << "编号" << "最高" << "最低" << "平均" << "温差";
+    temDataHeader << "编号" << "最低" << "最高" << "平均" << "温差";
     ui->temDataTable->setHorizontalHeaderLabels(temDataHeader);
     ui->temDataTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);//表头等宽
     ui->temDataTable->setSelectionBehavior(QAbstractItemView::SelectRows); //整行选中的方式
@@ -788,11 +788,16 @@ void Widget::playVideo()
 {
     if(NULL == m_pVideo || NULL == m_pCurrentImage)
         return;
-    m_resizedVideoFrame = QPixmap::fromImage(m_pCurrentImage->dst2QImage().scaled(ui->label_video->size(),Qt::KeepAspectRatio));
+    //m_resizedVideoFrame = QPixmap::fromImage(m_pCurrentImage->dst2QImage().scaled(ui->label_video->size(),Qt::KeepAspectRatio));
+
+    QImage myImage;
+    bool r = myImage.load("..\\111.jpg");
+    m_resizedVideoFrame = QPixmap::fromImage(myImage).scaled(ui->label_video->size(),Qt::KeepAspectRatio);
 //    qDebug("Widget::playVideo()::m_pCurrentImage w=%d,h=%d,\nm_resizedVideoFrame w=%d,h=%d,\nui->label_video w=%d,h=%d",m_pCurrentImage->dst2QImage().width(),m_pCurrentImage->dst2QImage().height()
 //           ,m_resizedVideoFrame.width(),m_resizedVideoFrame.height(),ui->label_video->width(),ui->label_video->height());
 //    qDebug("aspect ratio =%f",(float)m_resizedVideoFrame.height()/(float)m_resizedVideoFrame.width());
-    ui->label_video->setPixmap(m_resizedVideoFrame);
+    //ui->label_video->setPixmap(m_resizedVideoFrame);
+    ui->label_video->setCaptureImage(m_resizedVideoFrame);
     //ui->label_video->setScaledContents(true);
 }
 
@@ -1206,6 +1211,7 @@ void Widget::slotTempMeasCoordinate(QPoint top, QPoint bottom, QPoint labelPoint
     ui->tableWidget_pictureTemperatureMessure->setItem(caseRowCount, 1, new QTableWidgetItem(QString::number(*(pTemp))));
     ui->tableWidget_pictureTemperatureMessure->setItem(caseRowCount, 2, new QTableWidgetItem(QString::number(*(pTemp + 1))));
     ui->tableWidget_pictureTemperatureMessure->setItem(caseRowCount, 3, new QTableWidgetItem(QString::number(*(pTemp + 2))));
+    ui->tableWidget_pictureTemperatureMessure->setItem(caseRowCount, 4, new QTableWidgetItem(QString::number(*(pTemp + 2) - *(pTemp + 1))));
 }
 
 /********************************************************************
@@ -1631,6 +1637,17 @@ void Widget::on_outputBtn_clicked()
         for(int i = 0; i < imageList.size(); i ++)
         {
             emit sendPicture2(QPixmap::fromImage(imageList[i]), i);
+        }
+    }
+    //将图片分析区的测温tableWidget复制到诊断输出中
+    int rowCount       = ui->tableWidget_pictureTemperatureMessure->rowCount();
+    int columCount     = ui->tableWidget_pictureTemperatureMessure->columnCount();
+    for(int rowLoop = 0; rowLoop < rowCount; rowLoop++)
+    {
+        ui->temDataTable->setRowCount(ui->temDataTable->rowCount() + 1);
+        for(int columnLoop = 0; columnLoop < columCount; columnLoop++)
+        {
+            ui->temDataTable->setItem(rowLoop, columnLoop, ui->tableWidget_pictureTemperatureMessure->item(rowLoop, columnLoop));
         }
     }
 }

@@ -523,6 +523,11 @@
                    <string>平均</string>
                   </property>
                  </column>
+                 <column>
+                  <property name="text">
+                   <string>温差</string>
+                  </property>
+                 </column>
                 </widget>
                </item>
               </layout>
@@ -874,6 +879,11 @@
                  <column>
                   <property name="text">
                    <string>平均</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>温差</string>
                   </property>
                  </column>
                 </widget>
