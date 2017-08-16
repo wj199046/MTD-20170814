@@ -287,7 +287,6 @@ void Widget::on_pushButton_capture_clicked()
     QImage image = qvariant_cast<QImage>(pItem->data(Qt::DisplayRole));
     QPixmap pixmap(QPixmap::fromImage(image.scaled(278, 330)));
 
-    emit sendPicture(pixmap, column);
 
     //跳转到图片分析界面
     ui->tabWidget->setCurrentIndex(EN_ANALYSIS_TAB);
@@ -295,6 +294,9 @@ void Widget::on_pushButton_capture_clicked()
     ui->label_dataBase->setMousePressFlag(false);
     ui->label_report->setMousePressFlag(false);
     ui->label_analyze->setMousePressFlag(true);
+
+    emit sendPicture(pixmap, column);
+
  }
 
  void Widget::changeCurrentTab(PixLabel * pixLabel)
@@ -789,10 +791,14 @@ void Widget::playVideo()
     if(NULL == m_pVideo || NULL == m_pCurrentImage)
         return;
     m_resizedVideoFrame = QPixmap::fromImage(m_pCurrentImage->dst2QImage().scaled(ui->label_video->size(),Qt::KeepAspectRatio));
+
+//    QImage myImage;
+//    bool r = myImage.load("..\\111.jpg");
+    //m_resizedVideoFrame = QPixmap::fromImage(myImage).scaled(ui->label_video->size(),Qt::KeepAspectRatio);
 //    qDebug("Widget::playVideo()::m_pCurrentImage w=%d,h=%d,\nm_resizedVideoFrame w=%d,h=%d,\nui->label_video w=%d,h=%d",m_pCurrentImage->dst2QImage().width(),m_pCurrentImage->dst2QImage().height()
 //           ,m_resizedVideoFrame.width(),m_resizedVideoFrame.height(),ui->label_video->width(),ui->label_video->height());
 //    qDebug("aspect ratio =%f",(float)m_resizedVideoFrame.height()/(float)m_resizedVideoFrame.width());
-    ui->label_video->setPixmap(m_resizedVideoFrame);
+    ui->label_video->setCaptureImage(m_resizedVideoFrame);
     //ui->label_video->setScaledContents(true);
 }
 
@@ -1645,4 +1651,19 @@ void Widget::on_outputBtn_clicked()
             ui->temDataTable->setItem(rowLoop, columnLoop, new QTableWidgetItem(ui->tableWidget_pictureTemperatureMessure->item(rowLoop, columnLoop)->text()));
         }
     }
+
+}
+
+/********************************************************************
+* 函数名：on_pushButton_ClearCaptureArea_clicked
+* 功能：  槽函数，清除选取的区域
+* 参数：  无
+* 返回值：无
+*
+* 时间： 2017-8-16
+* 作者：wangzhiping
+*********************************************************************/
+void Widget::on_pushButton_ClearCaptureArea_clicked()
+{
+    ui->label_video->clearCaptureArea();
 }

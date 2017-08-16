@@ -212,29 +212,30 @@ void SplitScreenLabelWidget::splitScreen(int count)
 *********************************************************************/
 void SplitScreenLabelWidget::receivePicture(QPixmap pixmap, int columnIndex)
 {
+    qDebug("receive");
     int itemCount = layout()->count();
     //如果one为空，先填one
     if(NULL == m_pLabelOne->pixmap() || 1 == itemCount)
     {
-        m_pLabelOne->setCaptureImage(pixmap);
+        m_pLabelOne->setCaptureImage(pixmap.scaled(this->size()));
         m_scrollColumn[0] = columnIndex;//记录当前列号
         return;
     }
     if((itemCount > 1 && NULL == m_pLabelTwo->pixmap()) || 2 == itemCount)
     {
-        m_pLabelTwo->setCaptureImage(pixmap);
+        m_pLabelTwo->setCaptureImage(pixmap.scaled(this->size()));
         m_scrollColumn[1] = columnIndex;//记录当前列号
         return;
     }
     if(itemCount == 4 && NULL == m_pLabelThree->pixmap())
     {
-        m_pLabelThree->setCaptureImage(pixmap);
+        m_pLabelThree->setCaptureImage(pixmap.scaled(this->size()));
         m_scrollColumn[2] = columnIndex;//记录当前列号
         return;
     }
     if(4 == itemCount)
     {
-        m_pLabelFour->setCaptureImage(pixmap);
+        m_pLabelFour->setCaptureImage(pixmap.scaled(this->size()));
         m_scrollColumn[3] = columnIndex;//记录当前列号
         return;
     }
@@ -266,16 +267,16 @@ void SplitScreenLabelWidget::getColumn(int index)
 *******************************************************************/
 void SplitScreenLabelWidget::slotCompleteCapture(QPixmap captureimage)
 {
-    CCaptureScreenLabel *senderLabel = qobject_cast<CCaptureScreenLabel*>(sender());//获取当前信号的发送者
-    QPoint topPoint, bottomPoint;
-    senderLabel->getPoint(topPoint, bottomPoint);
-    int height = senderLabel->height();
-    int width  = senderLabel->width();
-    QPoint labelPoint;
-    labelPoint.setX(width);
-    labelPoint.setY(height);
-    //将图片发送给主界面
-    emit signalSendPrintScreen(captureimage, topPoint, bottomPoint, labelPoint);
+//    CCaptureScreenLabel *senderLabel = qobject_cast<CCaptureScreenLabel*>(sender());//获取当前信号的发送者
+//    QPoint topPoint, bottomPoint;
+//    senderLabel->getPoint(topPoint, bottomPoint);
+//    int height = senderLabel->height();
+//    int width  = senderLabel->width();
+//    QPoint labelPoint;
+//    labelPoint.setX(width);
+//    labelPoint.setY(height);
+//    //将图片发送给主界面
+//    emit signalSendPrintScreen(captureimage, topPoint, bottomPoint, labelPoint);
 
 }
 
@@ -290,15 +291,15 @@ void SplitScreenLabelWidget::slotCompleteCapture(QPixmap captureimage)
 ********************************************************************/
 void SplitScreenLabelWidget::slotMouseRelease()
 {
-    CCaptureScreenLabel *senderLabel = qobject_cast<CCaptureScreenLabel*>(sender());//获取当前信号的发送者
-    QPoint topPoint, bottomPoint;
-    senderLabel->getPoint(topPoint, bottomPoint);
-    int height = senderLabel->height();
-    int width  = senderLabel->width();
-    QPoint labelPoint;
-    labelPoint.setX(width);
-    labelPoint.setY(height);
-    emit signalTempMeasCoordinate(topPoint, bottomPoint, labelPoint);
+//    CCaptureScreenLabel *senderLabel = qobject_cast<CCaptureScreenLabel*>(sender());//获取当前信号的发送者
+//    QPoint topPoint, bottomPoint;
+//    senderLabel->getPoint(topPoint, bottomPoint);
+//    int height = senderLabel->height();
+//    int width  = senderLabel->width();
+//    QPoint labelPoint;
+//    labelPoint.setX(width);
+//    labelPoint.setY(height);
+//    emit signalTempMeasCoordinate(topPoint, bottomPoint, labelPoint);
 }
 
 /********************************************************************

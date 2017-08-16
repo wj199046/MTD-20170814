@@ -96,6 +96,8 @@ private slots:
 
     void on_outputBtn_clicked();
 
+    void on_pushButton_ClearCaptureArea_clicked();
+
 signals:
     void sendSplitScreenCount(int count);
     void sendPicture(QPixmap , int);

@@ -74,6 +74,7 @@ public:
 
     void setCaptureShape(CapScr_Shape captureShape);
     void init(const QPixmap & Image);
+    void resetSelectedArea();
 
 private:
 
@@ -96,23 +97,13 @@ private:
 
     void mousePressEvent(QMouseEvent *event);
     QPoint keepPointInRange(QMouseEvent *event);
-//    void rectMousePressEvent(QMouseEvent *event);
-//    void polygonMousePressEvent(QMouseEvent *event);
-//    void mousePressCapturePolygon(QMouseEvent *event);
-//    void mousePressAdjustPolygon(QMouseEvent *event);
 
     void mouseMoveEvent(QMouseEvent *event);
-//    void rectMouseMoveEvent(QMouseEvent *event);
-//    void polygonMouseMoveEvent(QMouseEvent *event);
-//    void mouseMoveAdjustAreaPos(QMouseEvent *event);
-//    void moveStretchRect(QPoint point);
-//    void mouseMoveAdjustStretchRect(QPoint point);
+
 
     void mouseDoubleClickEvent(QMouseEvent *event);
-    void resetSelectedArea();
+
     void mouseReleaseEvent(QMouseEvent *event);
-//    void rectMouseReleaseEvent(QMouseEvent *event);
-//    void polygonMouseReleaseEvent(QMouseEvent *event);
 
     void keyPressEvent(QKeyEvent *event);
 
