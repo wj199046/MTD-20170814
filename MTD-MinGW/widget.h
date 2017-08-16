@@ -98,7 +98,7 @@ private slots:
 
 signals:
     void sendSplitScreenCount(int count);
-    void sendPicture(QPixmap &, int);
+    void sendPicture(QPixmap , int);
 
     void sendSplitScreenCount2(int count);
     void sendPicture2(QPixmap, int);

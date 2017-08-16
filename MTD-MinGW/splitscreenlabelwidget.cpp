@@ -45,6 +45,7 @@ SplitScreenLabelWidget::SplitScreenLabelWidget(QWidget *parent)
     //设置间隔为0
     m_pGLayout->setSpacing(0);
     this->setLayout(m_pGLayout);
+
     setAcceptDrops(true);
 
     resetScrollColumn();
@@ -407,6 +408,15 @@ void SplitScreenLabelWidget::dropEvent(QDropEvent *e)
     }
 }
 
+/********************************************************************
+* 函数名：getImageList
+* 功能：  获取图片
+* 参数：  imageList 保存图片的vector
+* 返回值：无
+*
+* 时间： 2017-8-9
+* 作者：
+*********************************************************************/
 void SplitScreenLabelWidget::getImageList(QVector<QImage> &imageList)
 {
     if (NULL != m_pLabelOne->pixmap())
