@@ -18,8 +18,8 @@ public:
     CCaptureScreenLabel(QWidget *parent = 0);
     ~CCaptureScreenLabel();
 
-Q_SIGNALS:
-    void signalCompleteCapture(QPixmap captureimage);
+signals:
+    void signalCompleteCapture(QPixmap,QPoint,QPoint);
 
 public:
     void setCaptureImage(const QPixmap &Image);

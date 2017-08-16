@@ -38,7 +38,7 @@ private slots:
     void splitScreen(int count);
     void receivePicture(QPixmap pixmap, int columnIndex);
     void getColumn(int index);
-    void slotCompleteCapture(QPixmap captureimage);
+    void slotCompleteCapture(QPixmap, QPoint, QPoint);
     void slotMouseRelease();
 
 private:

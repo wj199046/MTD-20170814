@@ -67,8 +67,8 @@ public:
     explicit CCapureScreenHelper(QWidget *parent = nullptr);
     ~CCapureScreenHelper();
 
-Q_SIGNALS:
-    void signalCompleteCapture(QPixmap captureimage);
+signals:
+    captureComplete(QPixmap,QPoint,QPoint);
 
 public:
 

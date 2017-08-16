@@ -29,10 +29,10 @@ SplitScreenLabelWidget::SplitScreenLabelWidget(QWidget *parent)
     m_pLabelFour->setFrameShape(QFrame::Box);
     m_pLabelFour->hide();
 
-    connect(m_pLabelOne, SIGNAL(signalCompleteCapture(QPixmap)), this, SLOT(slotCompleteCapture(QPixmap)));
-    connect(m_pLabelTwo, SIGNAL(signalCompleteCapture(QPixmap)), this, SLOT(slotCompleteCapture(QPixmap)));
-    connect(m_pLabelThree, SIGNAL(signalCompleteCapture(QPixmap)), this, SLOT(slotCompleteCapture(QPixmap)));
-    connect(m_pLabelFour, SIGNAL(signalCompleteCapture(QPixmap)), this, SLOT(slotCompleteCapture(QPixmap)));
+    connect(m_pLabelOne, SIGNAL(signalCompleteCapture(QPixmap,QPoint,QPoint)), this, SLOT(slotCompleteCapture(QPixmap,QPoint,QPoint)));
+    connect(m_pLabelTwo, SIGNAL(signalCompleteCapture(QPixmap,QPoint,QPoint)), this, SLOT(slotCompleteCapture(QPixmap,QPoint,QPoint)));
+    connect(m_pLabelThree, SIGNAL(signalCompleteCapture(QPixmap,QPoint,QPoint)), this, SLOT(slotCompleteCapture(QPixmap,QPoint,QPoint)));
+    connect(m_pLabelFour, SIGNAL(signalCompleteCapture(QPixmap,QPoint,QPoint)), this, SLOT(slotCompleteCapture(QPixmap,QPoint,QPoint)));
 
     connect(m_pLabelOne, SIGNAL(signalMouseRelease( )), this, SLOT(slotMouseRelease( )));
     connect(m_pLabelTwo, SIGNAL(signalMouseRelease()), this, SLOT(slotMouseRelease( )));
@@ -265,18 +265,18 @@ void SplitScreenLabelWidget::getColumn(int index)
 * 时间： 2017-8-9
 * 作者：
 *******************************************************************/
-void SplitScreenLabelWidget::slotCompleteCapture(QPixmap captureimage)
+void SplitScreenLabelWidget::slotCompleteCapture(QPixmap captureimage,QPoint topPoint,QPoint bottomPoint)
 {
-//    CCaptureScreenLabel *senderLabel = qobject_cast<CCaptureScreenLabel*>(sender());//获取当前信号的发送者
+    CCaptureScreenLabel *senderLabel = qobject_cast<CCaptureScreenLabel*>(sender());//获取当前信号的发送者
 //    QPoint topPoint, bottomPoint;
 //    senderLabel->getPoint(topPoint, bottomPoint);
-//    int height = senderLabel->height();
-//    int width  = senderLabel->width();
-//    QPoint labelPoint;
-//    labelPoint.setX(width);
-//    labelPoint.setY(height);
-//    //将图片发送给主界面
-//    emit signalSendPrintScreen(captureimage, topPoint, bottomPoint, labelPoint);
+    int height = senderLabel->height();
+    int width  = senderLabel->width();
+    QPoint labelPoint;
+    labelPoint.setX(width);
+    labelPoint.setY(height);
+    //将图片发送给主界面
+    emit signalSendPrintScreen(captureimage, topPoint, bottomPoint, labelPoint);
 
 }
 

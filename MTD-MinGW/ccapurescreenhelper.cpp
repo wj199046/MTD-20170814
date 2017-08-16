@@ -242,7 +242,21 @@ void CCapureScreenHelper::paintEvent(QPaintEvent *event)
 
 void CCapureScreenHelper::mouseDoubleClickEvent(QMouseEvent *event)
 {
+    qDebug("mouseDoubleClickEvent");
 
+    if (InCurSelectedArea != m_enMousePos)
+    {
+        qDebug("mouseDoubleClickEvent return");
+        return;
+    }
+
+    m_currentSelectRect = m_astCapturedArea[m_iCurrentSelectedAreaIdx].Area.boundingRect().toRect();
+    m_capturePixmap =  m_loadPixmap.copy(m_currentSelectRect);
+//    qDebug("mouseDoubleClickEvent m_currentSelectRect topleft x=%d,topleft y=%d,bottomright x=%d,bottomright y=%d",
+//           m_currentSelectRect.topLeft().x(),m_currentSelectRect.topLeft().y(),
+//           m_currentSelectRect.bottomRight().x(),m_currentSelectRect.bottomRight().y());
+
+    captureComplete(m_capturePixmap,m_currentSelectRect.topLeft(),m_currentSelectRect.bottomRight());
 }
 
 void CCapureScreenHelper::getMousePos(QPoint MousePos)
@@ -456,7 +470,7 @@ void CCapureScreenHelper::keyPressEvent(QKeyEvent *event)
 
     if(event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
     {
-        signalCompleteCapture(m_capturePixmap);
+        //captureComplete(m_capturePixmap);
         close();
     }
 }

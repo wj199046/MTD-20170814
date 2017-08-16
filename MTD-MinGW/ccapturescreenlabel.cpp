@@ -7,6 +7,7 @@ CCaptureScreenLabel::CCaptureScreenLabel(QWidget *parent):QLabel(parent)
 {
     this->setMouseTracking(true);
     m_pCapScrHelper = new CCapureScreenHelper(this);
+    connect(m_pCapScrHelper,SIGNAL(captureComplete(QPixmap,QPoint,QPoint)),this,SIGNAL(signalCompleteCapture(QPixmap,QPoint,QPoint)));
 }
 
 CCaptureScreenLabel::~CCaptureScreenLabel()
