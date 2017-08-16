@@ -63,8 +63,8 @@ void CCapureScreenHelper::mousePressEvent(QMouseEvent *event)
 
     if(Qt::RightButton == event->button())
     {
-        resetSelectedArea();
-        update();
+//        resetSelectedArea();
+//        update();
         return;
     }
 

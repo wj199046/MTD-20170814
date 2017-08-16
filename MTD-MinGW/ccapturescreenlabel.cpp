@@ -24,10 +24,16 @@ void CCaptureScreenLabel::setCaptureImage(const QPixmap & Image)
 {
     setPixmap(Image);
 
-    m_pCapScrHelper->resize(this->size());
+    m_pCapScrHelper->resize(Image.size());
     m_pCapScrHelper->init(Image);
     m_pCapScrHelper->show();
     //qDebug("CCaptureScreenLabel w=%d,h=%d,m_pCapScrHelper w=%d,h=%d",this->width(),this->height(),m_pCapScrHelper->width(),m_pCapScrHelper->height());
+}
+
+void CCaptureScreenLabel::clearCaptureArea()
+{
+    m_pCapScrHelper->resetSelectedArea();
+    m_pCapScrHelper->update();
 }
 
 
