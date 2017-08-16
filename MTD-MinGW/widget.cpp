@@ -1642,7 +1642,7 @@ void Widget::on_outputBtn_clicked()
         ui->temDataTable->setRowCount(ui->temDataTable->rowCount() + 1);
         for(int columnLoop = 0; columnLoop < columCount; columnLoop++)
         {
-            ui->temDataTable->setItem(rowLoop, columnLoop, ui->tableWidget_pictureTemperatureMessure->item(rowLoop, columnLoop));
+            ui->temDataTable->setItem(rowLoop, columnLoop, new QTableWidgetItem(ui->tableWidget_pictureTemperatureMessure->item(rowLoop, columnLoop)->text()));
         }
     }
 }
