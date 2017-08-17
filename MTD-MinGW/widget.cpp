@@ -790,11 +790,11 @@ void Widget::playVideo()
 {
     if(NULL == m_pVideo || NULL == m_pCurrentImage)
         return;
-    m_resizedVideoFrame = QPixmap::fromImage(m_pCurrentImage->dst2QImage().scaled(ui->label_video->size(),Qt::KeepAspectRatio));
+//    m_resizedVideoFrame = QPixmap::fromImage(m_pCurrentImage->dst2QImage().scaled(ui->label_video->size(),Qt::KeepAspectRatio));
 
-//    QImage myImage;
-//    bool r = myImage.load("..\\111.jpg");
-//    m_resizedVideoFrame = QPixmap::fromImage(myImage).scaled(ui->label_video->size(),Qt::KeepAspectRatio);
+    QImage myImage;
+    bool r = myImage.load("..\\111.jpg");
+    m_resizedVideoFrame = QPixmap::fromImage(myImage).scaled(ui->label_video->size(),Qt::KeepAspectRatio);
 //    qDebug("Widget::playVideo()::m_pCurrentImage w=%d,h=%d,\nm_resizedVideoFrame w=%d,h=%d,\nui->label_video w=%d,h=%d",m_pCurrentImage->dst2QImage().width(),m_pCurrentImage->dst2QImage().height()
 //           ,m_resizedVideoFrame.width(),m_resizedVideoFrame.height(),ui->label_video->width(),ui->label_video->height());
 //    qDebug("aspect ratio =%f",(float)m_resizedVideoFrame.height()/(float)m_resizedVideoFrame.width());
