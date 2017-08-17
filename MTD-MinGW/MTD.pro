@@ -28,7 +28,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         widget.cpp \
-    ccapturescreenlabel.cpp \
     pixlabelwidget.cpp \
     recordupdatewidgets.cpp \
     resultupdatewidgets.cpp \
@@ -36,10 +35,11 @@ SOURCES += \
     scrollimagewidget.cpp \
     splitscreenlabelwidget.cpp \
     userinfowidgets.cpp \
+    ccapturescreenlabel.cpp \
+    ccapurescreenhelper.cpp
 
 HEADERS += \
         widget.h \
-    ccapturescreenlabel.h \
     common.h \
     pixlabelwidget.h \
     pixmapitemdele.h \
@@ -49,6 +49,8 @@ HEADERS += \
     scrollimagewidget.h \
     splitscreenlabelwidget.h \
     userinfowidgets.h \
+    ccapturescreenlabel.h \
+    ccapurescreenhelper.h
 
 FORMS += \
         widget.ui \
