@@ -34,10 +34,10 @@ SplitScreenLabelWidget::SplitScreenLabelWidget(QWidget *parent)
     connect(m_pLabelThree, SIGNAL(signalCompleteCapture(QPixmap,QPoint,QPoint)), this, SLOT(slotCompleteCapture(QPixmap,QPoint,QPoint)));
     connect(m_pLabelFour, SIGNAL(signalCompleteCapture(QPixmap,QPoint,QPoint)), this, SLOT(slotCompleteCapture(QPixmap,QPoint,QPoint)));
 
-    connect(m_pLabelOne, SIGNAL(signalMouseRelease( )), this, SLOT(slotMouseRelease( )));
-    connect(m_pLabelTwo, SIGNAL(signalMouseRelease()), this, SLOT(slotMouseRelease( )));
-    connect(m_pLabelThree, SIGNAL(signalMouseRelease()), this, SLOT(slotMouseRelease( )));
-    connect(m_pLabelFour, SIGNAL(signalMouseRelease()), this, SLOT(slotMouseRelease( )));
+    connect(m_pLabelOne, SIGNAL(signalMouseRelease(QPoint,QPoint)), this, SLOT(slotMouseRelease(QPoint,QPoint)));
+    connect(m_pLabelTwo, SIGNAL(signalMouseRelease(QPoint,QPoint)), this, SLOT(slotMouseRelease(QPoint,QPoint)));
+    connect(m_pLabelThree, SIGNAL(signalMouseRelease(QPoint,QPoint)), this, SLOT(slotMouseRelease(QPoint,QPoint )));
+    connect(m_pLabelFour, SIGNAL(signalMouseRelease(QPoint,QPoint)), this, SLOT(slotMouseRelease(QPoint,QPoint)));
 
     m_pGLayout = new QGridLayout;
     m_pGLayout->addWidget(m_pLabelOne);
@@ -289,17 +289,17 @@ void SplitScreenLabelWidget::slotCompleteCapture(QPixmap captureimage,QPoint top
 * 时间： 2017-8-15
 * 作者：
 ********************************************************************/
-void SplitScreenLabelWidget::slotMouseRelease()
+void SplitScreenLabelWidget::slotMouseRelease(QPoint topPoint, QPoint bottomPoint)
 {
-//    CCaptureScreenLabel *senderLabel = qobject_cast<CCaptureScreenLabel*>(sender());//获取当前信号的发送者
+    CCaptureScreenLabel *senderLabel = qobject_cast<CCaptureScreenLabel*>(sender());//获取当前信号的发送者
 //    QPoint topPoint, bottomPoint;
 //    senderLabel->getPoint(topPoint, bottomPoint);
-//    int height = senderLabel->height();
-//    int width  = senderLabel->width();
-//    QPoint labelPoint;
-//    labelPoint.setX(width);
-//    labelPoint.setY(height);
-//    emit signalTempMeasCoordinate(topPoint, bottomPoint, labelPoint);
+    int height = senderLabel->height();
+    int width  = senderLabel->width();
+    QPoint labelPoint;
+    labelPoint.setX(width);
+    labelPoint.setY(height);
+    emit signalTempMeasCoordinate(topPoint, bottomPoint, labelPoint);
 }
 
 /********************************************************************

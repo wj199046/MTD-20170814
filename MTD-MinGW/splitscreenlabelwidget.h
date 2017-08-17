@@ -40,7 +40,7 @@ private slots:
     void receivePicture(QPixmap pixmap, int columnIndex);
     void getColumn(int index);
     void slotCompleteCapture(QPixmap, QPoint, QPoint);
-    void slotMouseRelease();
+    void slotMouseRelease(QPoint,QPoint);
 
 private:
     void resetScrollColumn();

@@ -20,6 +20,7 @@ public:
 
 signals:
     void signalCompleteCapture(QPixmap,QPoint,QPoint);
+    void signalMouseRelease(QPoint,QPoint);
 
 public:
     void setCaptureImage(const QPixmap &Image);
