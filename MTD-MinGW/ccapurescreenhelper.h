@@ -116,6 +116,8 @@ private:
     bool MouseOnStretchRect(QPoint);
     void updateStretchRectPos(QRect curSelectedArea);
 
+    stCapturedArea createCapturedArea(CapScr_Shape shape,QPolygon CapturedArea,int AreaIdx );
+
 
 private:
     QPixmap m_loadPixmap,m_capturePixmap;

@@ -147,14 +147,7 @@ void CCapureScreenHelper::mouseMoveEvent(QMouseEvent *event)
         QPoint endPoint = keepPointInRange(event);
         m_endMovePoint = endPoint;
 
-        QRect tmp = getStretchRect();
-        stCapturedArea curArea;
-        curArea.shape = m_enCaptureShape;
-        curArea.Area.addRect(tmp);
-        QFont textFont;
-        textFont.setPointSize(14);
-        curArea.Area.addText(tmp.x() + 10,tmp.y() + 20,textFont,QString::number(m_iCurrentSelectedAreaIdx,10));
-
+        stCapturedArea curArea = createCapturedArea(m_enCaptureShape,QPolygon(getStretchRect()),m_iCurrentSelectedAreaIdx);
         m_astCapturedArea.removeAt(m_iCurrentSelectedAreaIdx);
         m_astCapturedArea.insert(m_iCurrentSelectedAreaIdx,curArea);
         updateStretchRectPos(m_astCapturedArea[m_iCurrentSelectedAreaIdx].Area.boundingRect().toRect());
@@ -164,6 +157,28 @@ void CCapureScreenHelper::mouseMoveEvent(QMouseEvent *event)
     }
 
     return QWidget::mouseMoveEvent(event);
+}
+
+stCapturedArea CCapureScreenHelper::createCapturedArea(CapScr_Shape shape,QPolygon CapturedArea,int AreaIdx )
+{
+    stCapturedArea curArea;
+    curArea.shape = shape;
+
+    QRect boundingRect = CapturedArea.boundingRect();
+
+    switch(shape)
+    {
+    case CapScr_Rectangle:curArea.Area.addRect(boundingRect);break;
+    case CapScr_Ellipse:curArea.Area.addEllipse(boundingRect);break;
+    case CapScr_Polygon:break;
+    default:break;
+    }
+
+    QFont textFont;
+    textFont.setPointSize(14);
+    curArea.Area.addText(boundingRect.x() + 10,boundingRect.y() + 20,textFont,QString::number(AreaIdx,10));
+
+    return curArea;
 }
 
 void CCapureScreenHelper::mouseReleaseEvent(QMouseEvent *event)
@@ -179,17 +194,15 @@ void CCapureScreenHelper::mouseReleaseEvent(QMouseEvent *event)
         }
 
         m_currentCaptureState = FinishCaptureImage;
-        stCapturedArea curArea;
-        curArea.shape = m_enCaptureShape;
-        curArea.Area.addRect(QRect(m_beginPoint,QSize(100,100)));
-        QFont textFont;
-        textFont.setPointSize(14);
-        curArea.Area.addText(m_beginPoint.x() + 10,m_beginPoint.y() + 20,textFont,QString::number(m_astCapturedArea.size(),10));
+
+        stCapturedArea curArea = createCapturedArea(m_enCaptureShape,QPolygon(QRect(m_beginPoint,QSize(100,100))),m_astCapturedArea.size());
+
         m_astCapturedArea.append(curArea);
         m_iCurrentSelectedAreaIdx = m_astCapturedArea.size() -1;
         updateStretchRectPos(m_astCapturedArea[m_iCurrentSelectedAreaIdx].Area.boundingRect().toRect());
 
         update();
+
     }
 
     if (ChangeCurSelectedArea == m_currentCaptureState)
