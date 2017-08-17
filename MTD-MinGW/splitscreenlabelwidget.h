@@ -18,12 +18,13 @@ public:
     explicit SplitScreenLabelWidget(QWidget *parent = 0);
     ~SplitScreenLabelWidget();
 
+public:
     void upDatePicture(QImage &image, int index);
     int  getCurrentColumn(int index);
     void clearLabelContent(int index);
     void setCaptureShape(int shape);
-
     void getImageList(QVector<QImage> &imageList);
+    void clearCaptureArea();
 
 protected:
     void dragEnterEvent(QDragEnterEvent *);

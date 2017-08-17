@@ -36,6 +36,7 @@ SOURCES += \
     scrollimagewidget.cpp \
     splitscreenlabelwidget.cpp \
     userinfowidgets.cpp \
+    ccapurescreenhelper.cpp
 
 HEADERS += \
         widget.h \
@@ -49,6 +50,7 @@ HEADERS += \
     scrollimagewidget.h \
     splitscreenlabelwidget.h \
     userinfowidgets.h \
+    ccapurescreenhelper.h
 
 FORMS += \
         widget.ui \

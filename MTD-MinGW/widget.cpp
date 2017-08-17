@@ -1212,7 +1212,7 @@ void Widget::slotTempMeasCoordinate(QPoint top, QPoint bottom, QPoint labelPoint
     ui->tableWidget_pictureTemperatureMessure->setItem(caseRowCount, 1, new QTableWidgetItem(QString::number(*(pTemp))));
     ui->tableWidget_pictureTemperatureMessure->setItem(caseRowCount, 2, new QTableWidgetItem(QString::number(*(pTemp + 1))));
     ui->tableWidget_pictureTemperatureMessure->setItem(caseRowCount, 3, new QTableWidgetItem(QString::number(*(pTemp + 2))));
-    ui->tableWidget_pictureTemperatureMessure->setItem(caseRowCount, 4, new QTableWidgetItem(QString::number(*(pTemp + 2) - *(pTemp + 1))));
+    ui->tableWidget_pictureTemperatureMessure->setItem(caseRowCount, 4, new QTableWidgetItem(QString::number(*(pTemp + 1) - *pTemp)));
 }
 
 /********************************************************************
@@ -1444,6 +1444,11 @@ void Widget::on_spinBox_MaxTmp_valueChanged(int arg1)
     stValue = m_pCurrentImage->getParamer();
     stValue.temHigh = arg1;
     m_pCurrentImage->setParamer(stValue);
+
+    //低温不能高于高温，高温不能低于低温
+    int min = ui->spinBox_MinTmp->value();
+    ui->spinBox_MinTmp->setRange(0, arg1);
+    ui->spinBox_MaxTmp->setRange(min, 255);
 }
 
 /********************************************************************
@@ -1462,6 +1467,11 @@ void Widget::on_spinBox_MinTmp_valueChanged(int arg1)
     stValue = m_pCurrentImage->getParamer();
     stValue.temLow = arg1;
     m_pCurrentImage->setParamer(stValue);
+
+    //低温不能高于高温，高温不能低于低温
+    int max = ui->spinBox_MaxTmp->value();
+    ui->spinBox_MaxTmp->setRange(arg1, 255);
+    ui->spinBox_MinTmp->setRange(0, max);
 }
 
 /********************************************************************
@@ -1656,7 +1666,7 @@ void Widget::on_outputBtn_clicked()
 
 /********************************************************************
 * 函数名：on_pushButton_ClearCaptureArea_clicked
-* 功能：  槽函数，清除选取的区域
+* 功能：  槽函数，清除选取的区域(数据采集界面)
 * 参数：  无
 * 返回值：无
 *
@@ -1666,4 +1676,18 @@ void Widget::on_outputBtn_clicked()
 void Widget::on_pushButton_ClearCaptureArea_clicked()
 {
     ui->label_video->clearCaptureArea();
+}
+
+/********************************************************************
+* 函数名：on_pushButton_clearArea_clicked
+* 功能：  槽函数，清除选取的区域（图片分析界面）
+* 参数：  无
+* 返回值：无
+*
+* 时间： 2017-8-17
+* 作者：
+*********************************************************************/
+void Widget::on_pushButton_clearArea_clicked()
+{
+    ui->label_analysisPicture->clearCaptureArea();
 }

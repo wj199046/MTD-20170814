@@ -437,3 +437,20 @@ void SplitScreenLabelWidget::getImageList(QVector<QImage> &imageList)
         imageList.append(m_pLabelFour->pixmap()->toImage());
     }
 }
+
+/********************************************************************
+* 函数名：clearCaptureArea
+* 功能：  清除测温区域
+* 参数：  无
+* 返回值：无
+*
+* 时间： 2017-8-9
+* 作者：
+*********************************************************************/
+void SplitScreenLabelWidget::clearCaptureArea()
+{
+    m_pLabelOne->clearCaptureArea();
+    m_pLabelTwo->clearCaptureArea();
+    m_pLabelThree->clearCaptureArea();
+    m_pLabelFour->clearCaptureArea();
+}

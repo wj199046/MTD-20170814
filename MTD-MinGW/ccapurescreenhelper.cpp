@@ -226,7 +226,7 @@ void CCapureScreenHelper::paintEvent(QPaintEvent *event)
 //            || BeginCaptureImage == m_currentCaptureState)
     {
         m_painter.begin(this);
-        m_painter.setPen(QPen(Qt::blue,1,Qt::SolidLine,Qt::FlatCap));
+        m_painter.setPen(QPen(Qt::red,1,Qt::SolidLine,Qt::FlatCap));
 
         for(int i = 0;i<m_astCapturedArea.size();i++)
         {
