@@ -794,7 +794,7 @@ void Widget::playVideo()
 
 //    QImage myImage;
 //    bool r = myImage.load("..\\111.jpg");
-    //m_resizedVideoFrame = QPixmap::fromImage(myImage).scaled(ui->label_video->size(),Qt::KeepAspectRatio);
+//    m_resizedVideoFrame = QPixmap::fromImage(myImage).scaled(ui->label_video->size(),Qt::KeepAspectRatio);
 //    qDebug("Widget::playVideo()::m_pCurrentImage w=%d,h=%d,\nm_resizedVideoFrame w=%d,h=%d,\nui->label_video w=%d,h=%d",m_pCurrentImage->dst2QImage().width(),m_pCurrentImage->dst2QImage().height()
 //           ,m_resizedVideoFrame.width(),m_resizedVideoFrame.height(),ui->label_video->width(),ui->label_video->height());
 //    qDebug("aspect ratio =%f",(float)m_resizedVideoFrame.height()/(float)m_resizedVideoFrame.width());
@@ -1171,8 +1171,14 @@ void Widget::slotSendPrintScreen(QPixmap captureimage, QPoint top, QPoint bottom
     m_bottomRightPoint.setX(scaledW * bottom.x());
     m_bottomRightPoint.setY(scaledH * bottom.y());
 
-    ui->label_printScreen->setPixmap(captureimage);
-    ui->label_printScreen->setScaledContents(true);
+    if (captureimage.width() < ui->label_printScreen->width() && captureimage.height() < ui->label_printScreen->height())
+    {
+        ui->label_printScreen->setPixmap(captureimage);
+    }
+    else
+    {
+    ui->label_printScreen->setPixmap(captureimage.scaled(ui->label_printScreen->size(),Qt::KeepAspectRatio));
+    }
 }
 
 /********************************************************************
