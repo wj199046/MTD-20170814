@@ -198,6 +198,7 @@ void CCapureScreenHelper::mouseReleaseEvent(QMouseEvent *event)
         m_iCurrentSelectedAreaIdx = m_iNextSelectedAreaIdx;
         updateStretchRectPos(m_astCapturedArea[m_iCurrentSelectedAreaIdx].Area.boundingRect().toRect());
         update();
+
     }
 
     if (BeginMoveCaptureArea == m_currentCaptureState)
@@ -209,6 +210,11 @@ void CCapureScreenHelper::mouseReleaseEvent(QMouseEvent *event)
     {
         m_currentCaptureState = FinishMoveStretchRect;
     }
+
+    m_currentSelectRect = m_astCapturedArea[m_iCurrentSelectedAreaIdx].Area.boundingRect().toRect();
+    m_capturePixmap =  m_loadPixmap.copy(m_currentSelectRect);
+
+    captureAreaChanged(m_currentSelectRect.topLeft(),m_currentSelectRect.bottomRight());
 
     return QWidget::mouseReleaseEvent(event);
 }

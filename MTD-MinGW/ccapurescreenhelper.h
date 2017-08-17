@@ -69,6 +69,7 @@ public:
 
 signals:
     captureComplete(QPixmap,QPoint,QPoint);
+    captureAreaChanged(QPoint,QPoint);
 
 public:
 
