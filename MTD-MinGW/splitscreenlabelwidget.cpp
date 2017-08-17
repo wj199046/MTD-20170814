@@ -373,7 +373,7 @@ void SplitScreenLabelWidget::dropEvent(QDropEvent *e)
             QRect labelTwoRect(m_pLabelTwo->frameGeometry().topLeft(), m_pLabelTwo->frameGeometry().bottomRight());
             if(labelTwoRect.contains(eventPoint))
             {
-                m_pLabelTwo->setCaptureImage(pixmapToShow);
+                m_pLabelTwo->setCaptureImage(pixmapToShow.scaled(this->size()));
 
                 m_scrollColumn[1] = m_index;
             }
@@ -385,23 +385,23 @@ void SplitScreenLabelWidget::dropEvent(QDropEvent *e)
             QRect labelFourRect(m_pLabelFour->frameGeometry().topLeft(), m_pLabelFour->frameGeometry().bottomRight());
             if(labelTwoRect.contains(eventPoint))
             {
-                m_pLabelTwo->setCaptureImage(pixmapToShow);
+                m_pLabelTwo->setCaptureImage(pixmapToShow.scaled(this->size()));
                 m_scrollColumn[1] = m_index;
             }
             if(labelThreeRect.contains(eventPoint))
             {
-                m_pLabelThree->setCaptureImage(pixmapToShow);
+                m_pLabelThree->setCaptureImage(pixmapToShow.scaled(this->size()));
                 m_scrollColumn[2] = m_index;
             }
             if(labelFourRect.contains(eventPoint))
             {
-                m_pLabelFour->setCaptureImage(pixmapToShow);
+                m_pLabelFour->setCaptureImage(pixmapToShow.scaled(this->size()));
                 m_scrollColumn[3] = m_index;
             }
         }
         if(labelOneRect.contains(eventPoint))
         {
-            m_pLabelOne->setCaptureImage(pixmapToShow);
+            m_pLabelOne->setCaptureImage(pixmapToShow.scaled(this->size()));
             m_scrollColumn[0] = m_index;
         }
         e->setDropAction(Qt::CopyAction);

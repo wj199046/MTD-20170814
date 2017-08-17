@@ -25,6 +25,7 @@ public:
     void setCaptureImage(const QPixmap &Image);
     void setCaptureShape(CapScr_Shape captureShape);
     void clearCaptureArea();
+    void clear();
 
 private:
 

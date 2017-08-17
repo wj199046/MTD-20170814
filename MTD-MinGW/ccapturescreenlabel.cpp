@@ -37,6 +37,12 @@ void CCaptureScreenLabel::clearCaptureArea()
     m_pCapScrHelper->update();
 }
 
+void CCaptureScreenLabel::clear()
+{
+    QLabel::clear();
+    clearCaptureArea();
+}
+
 
 
 
