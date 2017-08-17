@@ -1,4 +1,5 @@
 #include "ccapturescreenlabel.h"
+#include<QDebug>
 
 #define STRETCH_RECT_WIDTH 6
 #define STRETCH_RECT_HEIGHT 6
@@ -24,11 +25,10 @@ void CCaptureScreenLabel::setCaptureShape(CapScr_Shape captureShape)
 void CCaptureScreenLabel::setCaptureImage(const QPixmap & Image)
 {
     setPixmap(Image);
-
+    qDebug() << Image.width() <<"," << Image.height()<<"11111111111111111111111111111111"<<endl;
     m_pCapScrHelper->resize(Image.size());
     m_pCapScrHelper->init(Image);
     m_pCapScrHelper->show();
-    //qDebug("CCaptureScreenLabel w=%d,h=%d,m_pCapScrHelper w=%d,h=%d",this->width(),this->height(),m_pCapScrHelper->width(),m_pCapScrHelper->height());
 }
 
 void CCaptureScreenLabel::clearCaptureArea()

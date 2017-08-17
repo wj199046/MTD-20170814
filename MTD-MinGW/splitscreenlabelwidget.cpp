@@ -217,25 +217,25 @@ void SplitScreenLabelWidget::receivePicture(QPixmap pixmap, int columnIndex)
     //如果one为空，先填one
     if(NULL == m_pLabelOne->pixmap() || 1 == itemCount)
     {
-        m_pLabelOne->setCaptureImage(pixmap.scaled(this->size()));
+        m_pLabelOne->setCaptureImage(pixmap.scaled(278, 330));
         m_scrollColumn[0] = columnIndex;//记录当前列号
         return;
     }
     if((itemCount > 1 && NULL == m_pLabelTwo->pixmap()) || 2 == itemCount)
     {
-        m_pLabelTwo->setCaptureImage(pixmap.scaled(this->size()));
+        m_pLabelTwo->setCaptureImage(pixmap.scaled(m_pLabelTwo->size()));
         m_scrollColumn[1] = columnIndex;//记录当前列号
         return;
     }
     if(itemCount == 4 && NULL == m_pLabelThree->pixmap())
     {
-        m_pLabelThree->setCaptureImage(pixmap.scaled(this->size()));
+        m_pLabelThree->setCaptureImage(pixmap.scaled(m_pLabelThree->size()));
         m_scrollColumn[2] = columnIndex;//记录当前列号
         return;
     }
     if(4 == itemCount)
     {
-        m_pLabelFour->setCaptureImage(pixmap.scaled(this->size()));
+        m_pLabelFour->setCaptureImage(pixmap.scaled(m_pLabelFour->size()));
         m_scrollColumn[3] = columnIndex;//记录当前列号
         return;
     }
